@@ -1,0 +1,17 @@
+# Node modules
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment files
+.env
+
+# Operating System files
+.DS_Store    # macOS specific
+Thumbs.db    # Windows specific
+
+# Editor directories and files
+.vscode
