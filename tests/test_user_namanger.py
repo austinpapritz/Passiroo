@@ -21,6 +21,7 @@ class TestUserManager(unittest.TestCase):
     def test_userManager_hash_password_passwordDifferentThanHashed(self):
         # Assemble
         password = "example_password"
+        # Act
         hashed = self.user_manager.hash_password(password)
         # Assert
         self.assertNotEqual(password, hashed)
@@ -28,6 +29,7 @@ class TestUserManager(unittest.TestCase):
     def test_userManager_verify_password_hashedMatchesPassword(self):
         # Assemble
         password = "example_password"
+        #Act
         hashed = self.user_manager.hash_password(password)
         result = self.user_manager.verify_password(hashed, password)
         # Assert
