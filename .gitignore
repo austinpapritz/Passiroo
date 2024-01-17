@@ -14,4 +14,15 @@ __pycache__/
 Thumbs.db    # Windows specific
 
 # Editor directories and files
-.vscode
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Other
+dist/
