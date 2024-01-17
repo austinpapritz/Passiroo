@@ -1,5 +1,4 @@
 import bcrypt
-import sqlite3
 
 class UserManager:
     def __init__(self, db_connection):
