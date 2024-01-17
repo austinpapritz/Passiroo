@@ -4,8 +4,6 @@ from py.user_manager import UserManager
 
 # Navigate to project folder and run tests with 
 #   `python -m unittest discover -s tests`
-# Force print by running tests with 
-#   `python -m unittest discover -s tests -b`
 
 class TestUserManager(unittest.TestCase):
   # unittest runs setUp() before each test
@@ -58,7 +56,7 @@ class TestUserManager(unittest.TestCase):
         # Assert
         self.assertTrue(self.user_manager.login_user(email, password))
 
-    def test_userManager_login_user_checkInvalidLogin(self):
+    def test_userManager_login_user_checkInvalidLoginByPassword(self):
         # Assemble
         email = "login_test@example.com"
         password = "testlogin123"
@@ -66,6 +64,15 @@ class TestUserManager(unittest.TestCase):
         self.user_manager.register_user(email, password)
         # Assert
         self.assertFalse(self.user_manager.login_user(email, "wrongpassword"))
+        
+    def test_userManager_login_user_checkInvalidLoginByEmail(self):
+        # Assemble
+        email = "login_test@example.com"
+        password = "testlogin123"
+        # Act 
+        self.user_manager.register_user(email, password)
+        # Assert
+        self.assertFalse(self.user_manager.login_user("wrong@email.com", password))
 
     def tearDown(self):
       self.connection.close()
