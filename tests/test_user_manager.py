@@ -1,6 +1,6 @@
 import unittest
 import sqlite3
-from py.Models.user_manager import UserManager
+from py.models.user_manager import UserManager
 
 # Navigate to project folder and run tests with 
 #   `python -m unittest discover -s tests`

@@ -1,6 +1,7 @@
+import base64
+
 class PasswordManager:
     def __init__(self, db_connection):
-        # Constructor can take a database connection or any other necessary setup
         self.db_connection = db_connection
 
     def add_password(self, user_id, account, password):
@@ -14,11 +15,9 @@ class PasswordManager:
         pass
       
     def encrypt_password(self, password):
-        # Placeholder for password encryption logic
-        return password  # Replace with actual encryption logic
+        # Simple base64 encoding for demonstration
+        return base64.b64encode(password.encode()).decode()
 
     def decrypt_password(self, encrypted_password):
         # Placeholder for password decryption logic
         return encrypted_password  # Replace with actual decryption logic
-
-    # Additional methods as needed, like update_password, delete_password, etc.
