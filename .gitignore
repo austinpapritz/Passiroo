@@ -6,6 +6,9 @@ __pycache__/
 *.py[cod]
 *.pyo
 
+# Database
+.db
+
 # Environment files
 .env
 
