@@ -13,51 +13,54 @@ class TestPasswordManager(unittest.TestCase):
         self.connection.execute("""
             CREATE TABLE saved_passwords (
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                site_name TEXT NOT NULL,
-                account_name TEXT NOT NULL,
+                encrypted_site_name TEXT NOT NULL,
+                encrypted_account_name TEXT NOT NULL,
                 encrypted_password TEXT NOT NULL
             );
         """)
         key = Fernet.generate_key()
         self.password_manager = PasswordManager(self.connection, key)
 
-    def test_passwordManager_encrypt_password_passwordDifferentThanEncryption(self):
+    def test_passwordManager_encrypt_passwordDifferentThanEncryption(self):
         # Assemble
         password = "example_password"
         # Act
-        encryptedPassword = self.password_manager.encrypt_password(password)
+        encryptedPassword = self.password_manager.encrypt(password)
         # Assert
         self.assertNotEqual(password, encryptedPassword)
 
-    def test_passwordManager_decrypt_password_passwordEqualsDecryptedPassword(self):
+    def test_passwordManager_decrypt_passwordEqualsDecryptedPassword(self):
         # Assemble
         password = "example_password"
-        encryptedPassword = self.password_manager.encrypt_password(password)
+        encryptedPassword = self.password_manager.encrypt(password)
         # Act
-        decryptedPassword = self.password_manager.decrypt_password(encryptedPassword)
+        decryptedPassword = self.password_manager.decrypt(encryptedPassword)
         # Assert
         self.assertEqual(password, decryptedPassword)
 
-    def test_passwordManager_add_password_passwordDataMatchesFetchedData(self):
+    def test_passwordManager_add_saved_password_passwordDataMatchesFetchedData(self):
         # Assemble
         user_id = 1
         site_name = "example.com"
         account_name = "user@example.com"
         password = "password123"
         # Act
-        self.password_manager.add_password(user_id, site_name, account_name, password)
+        self.password_manager.add_saved_password(user_id, site_name, account_name, password)
         # Assert
         cursor = self.connection.cursor()
-        cursor.execute("SELECT encrypted_password FROM saved_passwords WHERE user_id=? AND site_name=? AND account_name=?", 
-                      (user_id, site_name, account_name))
+        cursor.execute("SELECT encrypted_site_name, encrypted_account_name, encrypted_password FROM saved_passwords WHERE user_id=?", 
+                      (user_id,))
         result = cursor.fetchone()
         self.assertIsNotNone(result)
 
-        encrypted_password = result[0]
-        self.assertNotEqual(password, encrypted_password)
-        decrypted_password = self.password_manager.decrypt_password(encrypted_password)
-        self.assertEqual(password, decrypted_password)
+        fetched_encrypted_site_name, fetched_encrypted_account_name, fetched_encrypted_password = result
+        decrypted_fetched_site_name = self.password_manager.decrypt(fetched_encrypted_site_name)
+        decrypted_fetched_account_name = self.password_manager.decrypt(fetched_encrypted_account_name)
+        decrypted_fetched_password = self.password_manager.decrypt(fetched_encrypted_password)
 
+        self.assertEqual(decrypted_fetched_site_name, site_name)
+        self.assertEqual(decrypted_fetched_account_name, account_name)
+        self.assertEqual(decrypted_fetched_password, password)
 
 if __name__ == '__main__':
     unittest.main()

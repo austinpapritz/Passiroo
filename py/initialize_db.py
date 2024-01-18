@@ -17,8 +17,8 @@ def create_database():
             CREATE TABLE IF NOT EXISTS saved_passwords (
                 password_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER,
-                site_name TEXT NOT NULL,
-                account_name TEXT NOT NULL,
+                encrypted_site_name TEXT NOT NULL,
+                encrypted_account_name TEXT NOT NULL,
                 encrypted_password TEXT NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users (user_id)
             );
