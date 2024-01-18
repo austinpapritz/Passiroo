@@ -93,7 +93,7 @@ class TestPasswordManager(unittest.TestCase):
         self.assertEqual(decrypted_account_name2, account_name2)
         self.assertEqual(decrypted_password2, password2)
 
-    def test_password_manager_edit_saved_password(self):
+    def test_password_manager_edit_saved_password_newDataMatchesFetchedData(self):
         # Assemble
         user_id = 1
         original_site_name = "example.com"
