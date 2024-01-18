@@ -12,7 +12,8 @@ class TestPasswordManager(unittest.TestCase):
         self.connection = sqlite3.connect(':memory:')
         self.connection.execute("""
             CREATE TABLE saved_passwords (
-                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                password_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
                 encrypted_site_name TEXT NOT NULL,
                 encrypted_account_name TEXT NOT NULL,
                 encrypted_password TEXT NOT NULL
@@ -61,6 +62,37 @@ class TestPasswordManager(unittest.TestCase):
         self.assertEqual(decrypted_fetched_site_name, site_name)
         self.assertEqual(decrypted_fetched_account_name, account_name)
         self.assertEqual(decrypted_fetched_password, password)
+    
+    def test_passwordManager_retrieve_saved_passwords_savedDataMatchesFetchedData(self):
+        # Assemble
+        user_id = 1 
+        site_name = "example1.com"
+        account_name = "user1@example.com"
+        password = "password123"
+        
+        user_id = 1 
+        site_name2 = "example2.com"
+        account_name2 = "user2@example.com"
+        password2 = "password2123"
+
+        # Act
+        self.password_manager.add_saved_password(user_id, site_name, account_name, password)
+        self.password_manager.add_saved_password(user_id, site_name2, account_name2, password2)
+        retrieved_entries = self.password_manager.retrieve_saved_passwords(user_id)
+
+        # Assert
+        self.assertEqual(len(retrieved_entries), 2)
+
+        decrypted_site_name, decrypted_account_name, decrypted_password = retrieved_entries[0]
+        self.assertEqual(decrypted_site_name, site_name)
+        self.assertEqual(decrypted_account_name, account_name)
+        self.assertEqual(decrypted_password, password)
+        
+        decrypted_site_name2, decrypted_account_name2, decrypted_password2 = retrieved_entries[1]
+        self.assertEqual(decrypted_site_name2, site_name2)
+        self.assertEqual(decrypted_account_name2, account_name2)
+        self.assertEqual(decrypted_password2, password2)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -28,3 +28,6 @@ class UserManager:
 
         stored_hashed_password = result[0]
         return bcrypt.checkpw(provided_password.encode(), stored_hashed_password) # Return bool if pw matches or not
+
+    def get_user_id(self, email):
+        pass

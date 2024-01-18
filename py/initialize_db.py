@@ -16,7 +16,7 @@ def create_database():
         conn.execute("""
             CREATE TABLE IF NOT EXISTS saved_passwords (
                 password_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER,
+                user_id INTEGER NOT NULL,
                 encrypted_site_name TEXT NOT NULL,
                 encrypted_account_name TEXT NOT NULL,
                 encrypted_password TEXT NOT NULL,
