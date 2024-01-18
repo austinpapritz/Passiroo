@@ -1,3 +1,4 @@
+from cryptography.fernet import Fernet
 import unittest
 import sqlite3
 from py.models.password_manager import PasswordManager
@@ -16,7 +17,8 @@ class TestPasswordManager(unittest.TestCase):
                 hashed_password TEXT NOT NULL
             );
         """)
-        self.password_manager = PasswordManager(self.connection)
+        key = Fernet.generate_key()
+        self.password_manager = PasswordManager(self.connection, key)
 
     def test_passwordManager_encrypt_password_passwordDifferentThanEncryption(self):
         # Assemble

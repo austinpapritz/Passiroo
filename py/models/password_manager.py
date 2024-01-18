@@ -1,8 +1,9 @@
-import base64
+from cryptography.fernet import Fernet
 
 class PasswordManager:
-    def __init__(self, db_connection):
+    def __init__(self, db_connection, encryption_key):
         self.db_connection = db_connection
+        self.fernet = Fernet(encryption_key)
 
     def add_password(self, user_id, account, password):
         # Encrypt the password before storing
@@ -15,8 +16,7 @@ class PasswordManager:
         pass
       
     def encrypt_password(self, password):
-        # Simple base64 encoding for demonstration
-        return base64.b64encode(password.encode()).decode()
+        return self.fernet.encrypt(password.encode()).decode()
 
     def decrypt_password(self, encrypted_password):
         # Placeholder for password decryption logic
