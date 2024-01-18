@@ -11,10 +11,11 @@ class TestPasswordManager(unittest.TestCase):
     def setUp(self):
         self.connection = sqlite3.connect(':memory:')
         self.connection.execute("""
-            CREATE TABLE users (
+            CREATE TABLE saved_passwords (
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email TEXT UNIQUE NOT NULL,
-                hashed_password TEXT NOT NULL
+                site_name TEXT NOT NULL,
+                account_name TEXT NOT NULL,
+                encrypted_password TEXT NOT NULL
             );
         """)
         key = Fernet.generate_key()
@@ -27,6 +28,36 @@ class TestPasswordManager(unittest.TestCase):
         encryptedPassword = self.password_manager.encrypt_password(password)
         # Assert
         self.assertNotEqual(password, encryptedPassword)
+
+    def test_passwordManager_decrypt_password_passwordEqualsDecryptedPassword(self):
+        # Assemble
+        password = "example_password"
+        encryptedPassword = self.password_manager.encrypt_password(password)
+        # Act
+        decryptedPassword = self.password_manager.decrypt_password(encryptedPassword)
+        # Assert
+        self.assertEqual(password, decryptedPassword)
+
+    def test_passwordManager_add_password_passwordDataMatchesFetchedData(self):
+        # Assemble
+        user_id = 1
+        site_name = "example.com"
+        account_name = "user@example.com"
+        password = "password123"
+        # Act
+        self.password_manager.add_password(user_id, site_name, account_name, password)
+        # Assert
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT encrypted_password FROM saved_passwords WHERE user_id=? AND site_name=? AND account_name=?", 
+                      (user_id, site_name, account_name))
+        result = cursor.fetchone()
+        self.assertIsNotNone(result)
+
+        encrypted_password = result[0]
+        self.assertNotEqual(password, encrypted_password)
+        decrypted_password = self.password_manager.decrypt_password(encrypted_password)
+        self.assertEqual(password, decrypted_password)
+
 
 if __name__ == '__main__':
     unittest.main()
