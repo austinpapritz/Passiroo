@@ -2,20 +2,21 @@
 import sqlite3
 import sys
 import json
-from py.models.password_manager import PasswordManager
-from py.models.user_manager import UserManager
+from cryptography.fernet import Fernet
+from models.password_manager import PasswordManager
+from models.user_manager import UserManager
 
 # Establish a database connection
 db_connection = sqlite3.connect('passiroo.db')
 
 # Create an instance of PasswordManager
-password_manager = PasswordManager(db_connection)
+# key = Fernet.generate_key()
+# password_manager = PasswordManager(db_connection, key)
 
 # Create an instance of UserManager
 user_manager = UserManager(db_connection)
 
 def register_user(email, password):
-    print('registering user')
     try:
         user_manager.register_user(email, password)
         return json.dumps({"status": "success"})
