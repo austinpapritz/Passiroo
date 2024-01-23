@@ -12,7 +12,7 @@ document.getElementById('registerButton').addEventListener('click', () => {
 if (window['electronAPI']) {
   window['electronAPI'].onRegisterReply((event, response) => {
     // forward user to app
-    return;
+    return
   });
 } else {
   console.error('electronAPI is not available');
