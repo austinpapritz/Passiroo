@@ -14,7 +14,6 @@ document.getElementById('registerButton').addEventListener('click', () => {
 
 if (window['electronAPI']) {
   window['electronAPI'].onRegisterReply((event, response) => {
-    console.log('Received response:', response);
     const responseElement = document.getElementById('responseElement');
     responseElement.innerHTML = response;
   });
