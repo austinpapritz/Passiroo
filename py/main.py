@@ -3,7 +3,7 @@ import sqlite3
 from py.Models.password_manager import PasswordManager
 
 # Establish a database connection
-db_connection = sqlite3.connect('path_to_your_database.db')
+db_connection = sqlite3.connect('Passiroo.db')
 
 # Create an instance of PasswordManager
 password_manager = PasswordManager(db_connection)
