@@ -28,7 +28,18 @@ class PasswordManager:
             decrypted_entries.append((decrypted_site_name, decrypted_account_name, decrypted_password))
 
         return decrypted_entries
-      
+
+    def edit_saved_password(self, password_id, site_name, account_name, password):
+        encrypted_site_name = self.encrypt(site_name)
+        encrypted_account_name = self.encrypt(account_name)
+        encrypted_password = self.encrypt(password)
+
+        with self.db_connection:
+            self.db_connection.execute(
+                "UPDATE saved_passwords SET encrypted_site_name = ?, encrypted_account_name = ?, encrypted_password = ? WHERE password_id = ?",
+                (encrypted_site_name, encrypted_account_name, encrypted_password, password_id)
+            )
+
     def encrypt(self, text_to_be_encrypted):
         return self.fernet.encrypt(text_to_be_encrypted.encode()).decode()
 

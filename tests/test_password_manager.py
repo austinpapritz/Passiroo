@@ -93,6 +93,34 @@ class TestPasswordManager(unittest.TestCase):
         self.assertEqual(decrypted_account_name2, account_name2)
         self.assertEqual(decrypted_password2, password2)
 
+    def test_password_manager_edit_saved_password_newDataMatchesFetchedData(self):
+        # Assemble
+        user_id = 1
+        original_site_name = "example.com"
+        original_account_name = "user@example.com"
+        original_password = "password123"
+        new_site_name = "newexample.com"
+        new_account_name = "newuser@example.com"
+        new_password = "newpassword456"
+
+        # Act
+        self.password_manager.add_saved_password(user_id, original_site_name, original_account_name, original_password)
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT password_id FROM saved_passwords WHERE user_id=?", (user_id,))
+        password_entry = cursor.fetchone()
+        self.assertIsNotNone(password_entry)
+        password_id = password_entry[0]
+
+        # Edit the password, site name, and account name
+        self.password_manager.edit_saved_password(password_id, new_site_name, new_account_name, new_password)
+
+        # Assert
+        retrieved_entries = self.password_manager.retrieve_saved_passwords(user_id)
+        self.assertEqual(len(retrieved_entries), 1)
+        decrypted_site_name, decrypted_account_name, decrypted_password = retrieved_entries[0]
+        self.assertEqual(decrypted_site_name, new_site_name)
+        self.assertEqual(decrypted_account_name, new_account_name)
+        self.assertEqual(decrypted_password, new_password)
 
 if __name__ == '__main__':
     unittest.main()

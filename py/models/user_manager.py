@@ -30,4 +30,11 @@ class UserManager:
         return bcrypt.checkpw(provided_password.encode(), stored_hashed_password) # Return bool if pw matches or not
 
     def get_user_id(self, email):
-        pass
+        cursor = self.db_connection.cursor()
+        cursor.execute("SELECT user_id FROM users WHERE email = ?", (email,))
+        result = cursor.fetchone()
+        
+        if result is None:
+            return None
+
+        return result[0]  # user_id

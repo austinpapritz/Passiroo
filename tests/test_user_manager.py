@@ -75,6 +75,19 @@ class TestUserManager(unittest.TestCase):
         self.user_manager.register_user(email, password)
         # Assert
         self.assertFalse(self.user_manager.login_user("wrong@email.com", password))
+        
+    def test_userManager_get_user_id_checkUserIdIsInt(self):
+        # Assemble
+        email = "test@example.com"
+        password = "password123"
+
+        # Act
+        self.user_manager.register_user(email, password)
+        
+        # Retrieve the user ID
+        user_id = self.user_manager.get_user_id(email)
+        self.assertIsNotNone(user_id)
+        self.assertIsInstance(user_id, int)
 
     def tearDown(self):
       self.connection.close()

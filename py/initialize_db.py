@@ -9,7 +9,7 @@ def create_database():
         conn.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT UNIQUE NOT NULL,
+                email TEXT UNIQUE NOT NULL,
                 hashed_password TEXT NOT NULL
             );
         """)
