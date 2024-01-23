@@ -14,8 +14,7 @@ document.getElementById('registerButton').addEventListener('click', () => {
 
 if (window['electronAPI']) {
   window['electronAPI'].onRegisterReply((event, response) => {
-    const responseElement = document.getElementById('responseElement');
-    responseElement.innerHTML = response;
+    return
   });
 } else {
   console.error('electronAPI is not available');
