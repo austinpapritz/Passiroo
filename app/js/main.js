@@ -41,11 +41,10 @@ ipcMain.on('login', (event, userData) => {
     pyProcess.stderr.on('data', (data) => {
       console.error(`stderr: ${data}`);
   });
-  
+
   pyProcess.on('close', (code) => {
       console.log(`Python script exited with code ${code}`);
   });
-    
     pyProcess.stdout.on('data', (data) => {
       event.reply('login-reply', data.toString());
     });
