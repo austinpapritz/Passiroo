@@ -76,7 +76,7 @@ class TestUserManager(unittest.TestCase):
         # Assert
         self.assertFalse(self.user_manager.login_user("wrong@email.com", password))
         
-    def test_userManager_get_user_id_checkUserIdIsInt(self):
+    def test_userManager_get_user_id_by_email_checkUserIdIsInt(self):
         # Assemble
         email = "test@example.com"
         password = "password123"
@@ -85,7 +85,7 @@ class TestUserManager(unittest.TestCase):
         self.user_manager.register_user(email, password)
         
         # Retrieve the user ID
-        user_id = self.user_manager.get_user_id(email)
+        user_id = self.user_manager.get_user_id_by_email(email)
         self.assertIsNotNone(user_id)
         self.assertIsInstance(user_id, int)
 
