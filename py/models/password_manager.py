@@ -39,7 +39,14 @@ class PasswordManager:
                 "UPDATE saved_passwords SET encrypted_site_name = ?, encrypted_account_name = ?, encrypted_password = ? WHERE password_id = ?",
                 (encrypted_site_name, encrypted_account_name, encrypted_password, password_id)
             )
-
+            
+    def delete_saved_password(self, password_id):
+        with self.db_connection:
+            self.db_connection.execute(
+                "DELETE FROM saved_passwords WHERE password_id = ?",
+                (password_id,)
+            )
+            
     def encrypt(self, text_to_be_encrypted):
         return self.fernet.encrypt(text_to_be_encrypted.encode()).decode()
 
