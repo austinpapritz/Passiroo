@@ -22,7 +22,7 @@ class PageManager:
         # Implementation to set plus page state
         pass
 
-    def create_random_password(special_chars, length):
+    def create_random_password(self, special_chars, length):
       if length < 8 or length > 16:
           raise ValueError("Password length must be between 8 and 16 characters.")
 
