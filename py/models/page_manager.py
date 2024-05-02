@@ -14,13 +14,13 @@ class PageManager:
         # Implementation to retrieve specific page state
         pass
 
-    def set_search_page_state(self):
-        # Implementation to set search page state
-        pass
-
     def set_plus_page_state(self):
         # Implementation to set plus page state
         pass
+
+    def set_search_page_state(self):
+      # Implementation to set search page state
+      pass
 
     def create_random_password(self, special_chars, length):
       if length < 8 or length > 16:
