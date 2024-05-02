@@ -23,10 +23,23 @@ def register_user(email, password):
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
 
-# Assuming the script is called with arguments
 if __name__ == '__main__':
     action = sys.argv[1]
     if action == 'register_user':
         email = sys.argv[2]
         password = sys.argv[3]
         print(register_user(email, password))
+
+def login_user(email, password):
+    try:
+        user_manager.login_user(email, password)
+        return json.dumps({"status": "success"})
+    except Exception as e:
+        return json.dumps({"status": "error", "message": str(e)})
+
+if __name__ == '__main__':
+    action = sys.argv[1]
+    if action == 'login_user':
+        email = sys.argv[2]
+        password = sys.argv[3]
+        print(login_user(email, password))

@@ -63,7 +63,7 @@ class TestPasswordManager(unittest.TestCase):
         self.assertEqual(decrypted_fetched_account_name, account_name)
         self.assertEqual(decrypted_fetched_password, password)
     
-    def test_passwordManager_retrieve_saved_passwords_savedDataMatchesFetchedData(self):
+    def test_passwordManager_get_saved_passwords_by_user_id_savedDataMatchesFetchedData(self):
         # Assemble
         user_id = 1 
         site_name = "example1.com"
@@ -78,7 +78,7 @@ class TestPasswordManager(unittest.TestCase):
         # Act
         self.password_manager.add_saved_password(user_id, site_name, account_name, password)
         self.password_manager.add_saved_password(user_id, site_name2, account_name2, password2)
-        retrieved_entries = self.password_manager.retrieve_saved_passwords(user_id)
+        retrieved_entries = self.password_manager.get_saved_passwords_by_user_id(user_id)
 
         # Assert
         self.assertEqual(len(retrieved_entries), 2)
@@ -115,7 +115,7 @@ class TestPasswordManager(unittest.TestCase):
         self.password_manager.edit_saved_password(password_id, new_site_name, new_account_name, new_password)
 
         # Assert
-        retrieved_entries = self.password_manager.retrieve_saved_passwords(user_id)
+        retrieved_entries = self.password_manager.get_saved_passwords_by_user_id(user_id)
         self.assertEqual(len(retrieved_entries), 1)
         decrypted_site_name, decrypted_account_name, decrypted_password = retrieved_entries[0]
         self.assertEqual(decrypted_site_name, new_site_name)

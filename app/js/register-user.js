@@ -11,8 +11,7 @@ document.getElementById('registerButton').addEventListener('click', () => {
 
 if (window['electronAPI']) {
   window['electronAPI'].onRegisterReply((event, response) => {
-    // forward user to app
-    return
+    //pull in function from main.js that will create a login window
   });
 } else {
   console.error('electronAPI is not available');

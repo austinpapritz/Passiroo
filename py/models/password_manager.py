@@ -15,7 +15,7 @@ class PasswordManager:
                 (user_id, encrypted_site_name, encrypted_account_name, encrypted_password)
             )
 
-    def retrieve_saved_passwords(self, user_id):
+    def get_saved_passwords_by_user_id(self, user_id):
         cursor = self.db_connection.cursor()
         cursor.execute("SELECT encrypted_site_name, encrypted_account_name, encrypted_password FROM saved_passwords WHERE user_id=?", (user_id,))
         encrypted_entries = cursor.fetchall()
@@ -39,7 +39,14 @@ class PasswordManager:
                 "UPDATE saved_passwords SET encrypted_site_name = ?, encrypted_account_name = ?, encrypted_password = ? WHERE password_id = ?",
                 (encrypted_site_name, encrypted_account_name, encrypted_password, password_id)
             )
-
+            
+    def delete_saved_password(self, password_id):
+        with self.db_connection:
+            self.db_connection.execute(
+                "DELETE FROM saved_passwords WHERE password_id = ?",
+                (password_id,)
+            )
+            
     def encrypt(self, text_to_be_encrypted):
         return self.fernet.encrypt(text_to_be_encrypted.encode()).decode()
 
