@@ -28,6 +28,30 @@ class PasswordManager:
             decrypted_entries.append((decrypted_site_name, decrypted_account_name, decrypted_password))
 
         return decrypted_entries
+      
+    def get_accountName_and_password_by_site_name(self, user_id, decrypted_site_name):
+        cursor = self.db_connection.cursor()
+
+        # Prepare SQL Query to retrieve all encrypted usernames and passwords for the user
+        query = """
+        SELECT encrypted_site_name, encrypted_account_name, encrypted_password FROM saved_passwords
+        WHERE user_id = ?
+        """
+        cursor.execute(query, (user_id,))
+        
+        # Fetch all results
+        results = cursor.fetchall()
+
+        for encrypted_site_name, encrypted_account_name, encrypted_password in results:
+            # Decrypt the site name
+            decrypted_site = self.decrypt(encrypted_site_name)
+            if decrypted_site == decrypted_site_name:
+                # Decrypt the username and password if a match is found
+                decrypted_accountName = self.decrypt(encrypted_account_name)
+                decrypted_password = self.decrypt(encrypted_password)
+                return {"accountName": decrypted_accountName, "password": decrypted_password}
+        
+        return None  # Or handle the case where no entry matches
 
     def edit_saved_password(self, password_id, site_name, account_name, password):
         encrypted_site_name = self.encrypt(site_name)

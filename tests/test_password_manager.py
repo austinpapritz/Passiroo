@@ -121,6 +121,21 @@ class TestPasswordManager(unittest.TestCase):
         self.assertEqual(decrypted_site_name, new_site_name)
         self.assertEqual(decrypted_account_name, new_account_name)
         self.assertEqual(decrypted_password, new_password)
+        
+    def test_password_manager_get_accountName_and_password_by_site_name_fetchedDataMatchesSavedData(self):
+        # Assemble
+        user_id = 1
+        site_name = "www.retrievebysite.com"
+        account_name = "user@example.com"
+        password = "password123"
+
+        # Act
+        self.password_manager.add_saved_password(user_id, site_name, account_name, password)
+        results = self.password_manager.get_accountName_and_password_by_site_name(user_id, site_name)
+        
+        # Assert
+        self.assertEqual(results["accountName"], account_name)
+        self.assertEqual(results["password"], password)
 
 if __name__ == '__main__':
     unittest.main()
