@@ -1,4 +1,5 @@
 import unittest
+import string
 from py.models.page_manager import PageManager
 
 # Navigate to project folder and run tests with 
@@ -49,6 +50,23 @@ class TestPageManager(unittest.TestCase):
           for char in special_chars3:
               with self.subTest(char=char):
                   self.assertIn(char, result3, f"Special character {char} not found in password3")
+                  
+  def test_pageManager_createRandomPassword_outputContainsLowerUpperAndDigit(self):
+      # Assemble
+          special_chars = "@%&$-."
+          length = 12
+          lower = set(string.ascii_lowercase)
+          upper = set(string.ascii_uppercase)
+          digits = set(string.digits)
+          
+      # Act
+          results = [self.page_manager.create_random_password(special_chars, length) for _ in range(3)]
+
+      # Assert
+          for i, result in enumerate(results, 1):
+            self.assertTrue(any(c in result for c in lower), f"Lowercase character not found in result {i}")
+            self.assertTrue(any(c in result for c in upper), f"Uppercase character not found in result {i}")
+            self.assertTrue(any(c in result for c in digits), f"Digit not found in result {i}")
 
 if __name__ == '__main__':
     unittest.main()
