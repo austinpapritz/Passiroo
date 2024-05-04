@@ -6,9 +6,7 @@ class PasswordManager:
         self.fernet = Fernet(encryption_key)
 
     def add_saved_password(self, user_id, site_name, account_name, password):
-        print(site_name)
         encrypted_site_name = self.encrypt(site_name)
-        print(encrypted_site_name)
         encrypted_account_name = self.encrypt(account_name)
         encrypted_password = self.encrypt(password)
         with self.db_connection:
