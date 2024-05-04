@@ -26,6 +26,29 @@ class TestPageManager(unittest.TestCase):
               with self.subTest(length=length):
                   with self.assertRaises(ValueError, msg=f"Should raise error for length {length}"):
                       self.page_manager.create_random_password(special_chars, length)
+                      
+  def test_pageManager_createRandomPassword_outputContainsCorrectSpecialChars(self):
+      # Assemble
+          special_chars1 = "!@#"
+          special_chars2 = "!-."
+          special_chars3 = "@%&$"
+          length = 12
+          
+      # Act
+          result1 = self.page_manager.create_random_password(special_chars1, length)
+          result2 = self.page_manager.create_random_password(special_chars2, length)
+          result3 = self.page_manager.create_random_password(special_chars3, length)
+
+      # Assert
+          for char in special_chars1:
+              with self.subTest(char=char):
+                  self.assertIn(char, result1, f"Special character {char} not found in password1")
+          for char in special_chars2:
+              with self.subTest(char=char):
+                  self.assertIn(char, result2, f"Special character {char} not found in password2")
+          for char in special_chars3:
+              with self.subTest(char=char):
+                  self.assertIn(char, result3, f"Special character {char} not found in password3")
 
 if __name__ == '__main__':
     unittest.main()
