@@ -67,6 +67,21 @@ class TestPageManager(unittest.TestCase):
             self.assertTrue(any(c in result for c in lower), f"Lowercase character not found in result {i}")
             self.assertTrue(any(c in result for c in upper), f"Uppercase character not found in result {i}")
             self.assertTrue(any(c in result for c in digits), f"Digit not found in result {i}")
+            
+  def test_pageManager_createRandomPassword_outputIsRandom(self):
+      # Assemble
+          special_chars = "@%&$-."
+          length = 12
+
+      # Act
+          results = [self.page_manager.create_random_password(special_chars, length) for _ in range(10)]
+
+      # Assert
+          seen_passwords = set()
+          for i, result in enumerate(results, 1):
+              # Check if the password is already in the set
+              self.assertNotIn(result, seen_passwords, f"Password {i} was found more than once.")
+              seen_passwords.add(result)  # Add the password to the set
 
 if __name__ == '__main__':
     unittest.main()
