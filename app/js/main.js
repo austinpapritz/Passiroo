@@ -9,9 +9,11 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
+      frame: false
     },
   });
 
+  win.removeMenu();
   win.loadFile('app/index.html');
 }
 
