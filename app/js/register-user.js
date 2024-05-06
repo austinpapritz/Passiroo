@@ -16,3 +16,7 @@ if (window['electronAPI']) {
 } else {
   console.error('electronAPI is not available');
 }
+
+if (window['electronAPI']) {
+  window['electronAPI'].setupWindowControls();
+}
