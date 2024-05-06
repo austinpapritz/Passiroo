@@ -3,21 +3,38 @@ const { spawn } = require('child_process');
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
+let mainWindow;
+
 function createWindow() {
-  const win = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
+    width: 800,
+    height: 512,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      frame: false
+      enableRemoteModule: false
     },
+    titleBarStyle: 'hidden'
   });
-
-  win.removeMenu();
-  win.loadFile('app/index.html');
+  mainWindow.loadFile('app/register.html');
 }
 
-app.whenReady().then(createWindow);
+ipcMain.on('resize-window', (event, { width, height }) => {
+  mainWindow.setContentSize(width, height);
+  // Optional: Center the window again after resizing
+  mainWindow.center();
+});
+
+app.on('ready', createWindow);
+
+ipcMain.on('close-window', () => {
+  mainWindow.close();
+});
+
+ipcMain.on('minimize-window', () => {
+  mainWindow.minimize();
+});
 
 ipcMain.on('register', (event, userData) => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
