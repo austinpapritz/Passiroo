@@ -17,7 +17,7 @@ function createWindow() {
     },
     titleBarStyle: 'hidden'
   });
-  mainWindow.loadFile('app/register.html');
+  mainWindow.loadFile('app/views/register.html');
 }
 
 ipcMain.on('resize-window', (event, { width, height }) => {
