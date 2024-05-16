@@ -14,10 +14,10 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
       enableRemoteModule: false
-    },
-    titleBarStyle: 'hidden'
+    }
+    // titleBarStyle: 'hidden'
   });
-  mainWindow.loadFile('app/register.html');
+  mainWindow.loadFile('app/views/register.html');
 }
 
 ipcMain.on('resize-window', (event, { width, height }) => {
@@ -27,14 +27,6 @@ ipcMain.on('resize-window', (event, { width, height }) => {
 });
 
 app.on('ready', createWindow);
-
-ipcMain.on('close-window', () => {
-  mainWindow.close();
-});
-
-ipcMain.on('minimize-window', () => {
-  mainWindow.minimize();
-});
 
 ipcMain.on('register', (event, userData) => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
