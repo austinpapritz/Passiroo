@@ -8,6 +8,8 @@ __pycache__/
 
 # Database
 *.db
+passiroo.db
+.db
 
 # Environment files
 .env

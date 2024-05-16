@@ -3,6 +3,5 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   sendRegister: (data) => ipcRenderer.send('register', data),
-  onRegisterReply: (callback) => ipcRenderer.on('register-reply', callback),
-  setupWindowControls: utilities.setupWindowControls
+  onRegisterReply: (callback) => ipcRenderer.on('register-reply', callback)
 });
