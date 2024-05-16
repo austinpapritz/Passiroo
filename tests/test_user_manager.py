@@ -31,6 +31,21 @@ class TestUserManager(unittest.TestCase):
         # Assert
         self.assertEqual(user_id, results)
 
+    def test_userManager_UserManager_delCurrentUserId(self):
+        # Assemble
+        account_name = "sotesty@gmail.com"
+        password = "example_password"
+        self.user_manager.register_user(account_name, password) # runs login_user() after registering
+
+        # Act
+        results = self.user_manager.current_user_id
+        self.assertIsNotNone(results)
+        del UserManager.current_user_id
+
+        # Assert
+        with self.assertRaises(AttributeError):
+          _ = self.user_manager.current_user_id
+
     def test_userManager_hash_password_passwordDifferentThanHashed(self):
         # Assemble
         password = "example_password"
