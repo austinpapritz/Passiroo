@@ -19,19 +19,9 @@
       <button id="registerButton">Register</button>
     </div>
     <div class="about">
-      <button id="registerButton">Go to Login</button>
+      <button id="loginButton">Login</button>
     </div>
   </main>
   <script src="../js/register-user.js"></script>
-  <script src="../js/main.js">
-    window.addEventListener('DOMContentLoaded', () => {
-      const width = document.documentElement.scrollWidth;
-      const height = document.documentElement.scrollHeight;
-    
-      if (window.electronAPI) {
-        window.electronAPI.resizeWindow(width, height);
-      }
-    });
-  </script>
 </body>
 </html>
