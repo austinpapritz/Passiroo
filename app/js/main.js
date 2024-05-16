@@ -28,14 +28,6 @@ ipcMain.on('resize-window', (event, { width, height }) => {
 
 app.on('ready', createWindow);
 
-// ipcMain.on('close-window', () => {
-//   mainWindow.close();
-// });
-
-// ipcMain.on('minimize-window', () => {
-//   mainWindow.minimize();
-// });
-
 ipcMain.on('register', (event, userData) => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
     const pyProcess = spawn('python', [pythonScriptPath, 'register_user', userData.username, userData.password]);
