@@ -1,4 +1,3 @@
-# Example main.py
 import sqlite3
 import sys
 import json

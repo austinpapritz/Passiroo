@@ -1,8 +1,21 @@
 import bcrypt
 
-class UserManager:
+class UserManager(object):
     def __init__(self, db_connection):
         self.db_connection = db_connection
+        self._current_user_id = None
+        
+    @property
+    def current_user_id(self):
+        return self._current_user_id
+
+    @current_user_id.setter
+    def current_user_id(self, value):
+        self._current_user_id = value
+
+    @current_user_id.deleter
+    def current_user_id(self):
+        del self._current_user_id
 
     def hash_password(self, password):
         salt = bcrypt.gensalt()
@@ -18,6 +31,7 @@ class UserManager:
                 "INSERT INTO users (email, hashed_password) VALUES (?, ?)",
                 (email, hashed_password)
             )
+        self.login_user(email, password)
 
     def login_user(self, email, provided_password):
         cursor = self.db_connection.cursor()
@@ -27,7 +41,19 @@ class UserManager:
             return False  # False if User not found
 
         stored_hashed_password = result[0]
-        return bcrypt.checkpw(provided_password.encode(), stored_hashed_password) # Return bool if pw matches or not
+        pw_check_bool = bcrypt.checkpw(provided_password.encode(), stored_hashed_password)
+        if pw_check_bool is True:
+            user_id = self.get_user_id_by_email(email)
+            if user_id:
+              UserManager.current_user_id = user_id
+              return True
+            else: 
+              return None
+        else:
+            return False
+
+    def logout_user(self):
+        del UserManager.current_user_id
 
     def get_user_id_by_email(self, email):
         cursor = self.db_connection.cursor()
