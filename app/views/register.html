@@ -5,23 +5,33 @@
   <link rel="stylesheet" type="text/css" href="../css/style.css">
 </head>
 <body>
-  <main>
-    <div class="underlay blue">
-    </div>
-    <div class="welcome">
-      <h1>Passiroo</h1></div>
-    <div class="plus">
-      <input type="text" id="usernameInput" placeholder="Username">
-      <input type="password" id="passwordInput" placeholder="Password">
-    </div>
-    
-    <div class="search">
-      <button id="registerButton">Register</button>
-    </div>
-    <div class="about">
-      <button id="loginButton">Login</button>
-    </div>
-  </main>
+  <div class="grid">
+    <li class="passiroo">
+      <h1 class="passiroo-font">
+        passiroo
+      </h1>
+    </li>
+    <li class="plus">
+      <input 
+            id="emailInput"
+            type="text"
+            placeholder="e-mail" />
+      <input 
+            id="passwordInput"
+            type="text"
+            placeholder="password" />
+      <button type="button">login</button>      
+    </li>
+    <li class="search">
+      <h3>or</h3>
+    </li>
+    <li class="about">
+      <input 
+            type="text"
+            placeholder="confirm password" />
+      <button type="button">register</button>
+    </li>
+</div>
   <script src="../js/register-user.js"></script>
 </body>
 </html>

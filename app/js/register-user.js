@@ -10,11 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.getElementById('registerButton').addEventListener('click', () => {
-  const username = document.getElementById('usernameInput').value;
+  const email = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
 
   if (window['electronAPI']) {
-    window['electronAPI'].sendRegister({ username, password });
+    window['electronAPI'].sendRegister({ email, password });
   } else {
     console.error('electronAPI is not available');
   }
@@ -29,11 +29,11 @@ if (window['electronAPI']) {
 }
 
 document.getElementById('loginButton').addEventListener('click', () => {
-  const username = document.getElementById('usernameInput').value;
+  const email = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
 
   if (window['electronAPI']) {
-    window['electronAPI'].sendRegister({ username, password });
+    window['electronAPI'].sendRegister({ email, password });
   } else {
     console.error('electronAPI is not available');
   }

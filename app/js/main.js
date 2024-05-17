@@ -8,15 +8,16 @@ let mainWindow;
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 512,
+    height: 640,
+    transparent: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      enableRemoteModule: false
-    }
+      enableRemoteModule: false,
+    },
     // Uncomment if you want to hide the title bar:
-    // titleBarStyle: 'hidden'
+    titleBarStyle: 'hidden'
   });
   mainWindow.loadFile('app/views/register.html');
   // Uncomment to open the DevTools:
