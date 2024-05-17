@@ -18,6 +18,34 @@ class TestUserManager(unittest.TestCase):
         """)
         self.user_manager = UserManager(self.connection)
 
+    def test_userManager_login_user_setsCurrentUserId(self):
+        # Assemble
+        account_name = "sotesty@gmail.com"
+        password = "example_password"
+        self.user_manager.register_user(account_name, password) # runs login_user() after registering
+
+        # Act
+        user_id = self.user_manager.get_user_id_by_email(account_name)
+        results = self.user_manager.current_user_id
+
+        # Assert
+        self.assertEqual(user_id, results)
+
+    def test_userManager_UserManager_delCurrentUserId(self):
+        # Assemble
+        account_name = "sotesty@gmail.com"
+        password = "example_password"
+        self.user_manager.register_user(account_name, password) # runs login_user() after registering
+
+        # Act
+        results = self.user_manager.current_user_id
+        self.assertIsNotNone(results)
+        del UserManager.current_user_id
+
+        # Assert
+        with self.assertRaises(AttributeError):
+          _ = self.user_manager.current_user_id
+
     def test_userManager_hash_password_passwordDifferentThanHashed(self):
         # Assemble
         password = "example_password"
