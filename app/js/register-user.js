@@ -1,3 +1,14 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const width = document.documentElement.clientWidth;
+  const height = document.documentElement.clientHeight;
+
+  if (window['electronAPI']) {
+    window['electronAPI'].resizeWindow(width, height);
+  } else {
+    console.error('electronAPI is not available');
+  }
+});
+
 document.getElementById('registerButton').addEventListener('click', () => {
   const username = document.getElementById('usernameInput').value;
   const password = document.getElementById('passwordInput').value;
