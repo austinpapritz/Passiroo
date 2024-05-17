@@ -17,6 +17,13 @@ if (window['electronAPI']) {
   console.error('electronAPI is not available');
 }
 
-if (window['electronAPI']) {
-  window['electronAPI'].setupWindowControls();
-}
+document.getElementById('loginButton').addEventListener('click', () => {
+  const username = document.getElementById('usernameInput').value;
+  const password = document.getElementById('passwordInput').value;
+
+  if (window['electronAPI']) {
+    window['electronAPI'].sendRegister({ username, password });
+  } else {
+    console.error('electronAPI is not available');
+  }
+});
