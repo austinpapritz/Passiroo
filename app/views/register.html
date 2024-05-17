@@ -3,35 +3,47 @@
 <head>
   <title>Passiroo</title>
   <link rel="stylesheet" type="text/css" href="../css/style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-  <div class="grid">
-    <li class="passiroo">
-      <h1 class="passiroo-font">
-        passiroo
-      </h1>
-    </li>
-    <li class="plus">
-      <input 
-            id="emailInput"
-            type="text"
-            placeholder="e-mail" />
-      <input 
-            id="passwordInput"
-            type="text"
-            placeholder="password" />
-      <button type="button">login</button>      
-    </li>
-    <li class="search">
-      <h3>or</h3>
-    </li>
-    <li class="about">
-      <input 
-            type="text"
-            placeholder="confirm password" />
-      <button type="button">register</button>
-    </li>
-</div>
+  <form class="needs-validation" novalidate>
+    <div class="grid">
+      <li class="passiroo">
+        <h1 class="passiroo-font">
+          passiroo
+        </h1>
+      </li>
+      <li class="plus">
+        <input 
+              id="emailInput"
+              type="email"
+              class="form-control"
+              placeholder="e-mail" 
+              required />
+        <input 
+              id="passwordInput"
+              type="password" 
+              class="form-control" 
+              placeholder="password" 
+              required />
+        <button type="submit" class="btn btn-primary">login</button>      
+      </li>
+      <li class="search">
+        <h3>or</h3>
+      </li>
+      <li class="about">
+        <input 
+              id="confirmPassword"
+              type="password"
+              class="form-control"
+              placeholder="confirm password" />
+        <button type="submit" class="btn btn-secondary">register</button>
+      </li>
+  </div>
+  </form>
   <script src="../js/register-user.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

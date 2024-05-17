@@ -1,3 +1,21 @@
+// Disable form submit if there are any invalid fields.
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    var forms = document.getElementsByClassName('needs-validation');
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+
+// Grab content size to resize window.
 document.addEventListener('DOMContentLoaded', () => {
   const width = document.documentElement.clientWidth;
   const height = document.documentElement.clientHeight;
