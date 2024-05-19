@@ -1,9 +1,11 @@
+const API = window['electronAPI'];
+
 // Disable form submit if there are any invalid fields.
 (function() {
   'use strict';
   window.addEventListener('load', function() {
     var forms = document.getElementsByClassName('needs-validation');
-    var validation = Array.prototype.filter.call(forms, function(form) {
+    Array.prototype.filter.call(forms, function(form) {
       form.addEventListener('submit', function(event) {
         if (!form.checkValidity()) {
           event.preventDefault();
@@ -15,44 +17,79 @@
   }, false);
 })();
 
-// Grab content size to resize window.
-document.addEventListener('DOMContentLoaded', () => {
-  const width = document.documentElement.clientWidth;
-  const height = document.documentElement.clientHeight;
-
-  if (window['electronAPI']) {
-    window['electronAPI'].resizeWindow(width, height);
-  } else {
-    console.error('electronAPI is not available');
-  }
-});
-
-document.getElementById('registerButton').addEventListener('click', () => {
+// Handle login.
+document.getElementById('loginButton').addEventListener('click', () => {
+  console.log('click')
   const email = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
 
-  if (window['electronAPI']) {
-    window['electronAPI'].sendRegister({ email, password });
+  if (API) {
+    API.sendLogin({ email, password });
+    console.log('sendLogin API')
   } else {
     console.error('electronAPI is not available');
   }
 });
 
-if (window['electronAPI']) {
-  window['electronAPI'].onRegisterReply((event, response) => {
-    //pull in function from main.js that will create a login window
+
+// Handle register.
+document.getElementById('registerButton').addEventListener('click', (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('emailInput');
+  const confirmPassword = document.getElementById('confirmPasswordInput');
+  const password = document.getElementById('passwordInput');
+
+  // Ensure confirmPasswordInput is required
+  confirmPassword.setAttribute("required", "");
+
+  // Check if the password matches the confirm password
+  if (passwordInput.value !== confirmPasswordInput.value) {
+    // If they don't match, add Bootstrap's is-invalid class to show the error
+    confirmPasswordInput.classList.add('is-invalid');
+    confirmPasswordInput.nextElementSibling.innerHTML = "Passwords do not match."; // Assumes there is a div for feedback immediately following the input
+    return; // Stop the function from proceeding
+  } else {
+    // If they match, remove any invalid class that might have been added previously
+    confirmPasswordInput.classList.remove('is-invalid');
+  }
+
+
+  if (API) {
+    API.sendRegister({ email: email.value, password: password.value });
+  } else {
+    console.error('electronAPI is not available');
+  }
+});
+
+console.log('reply about to')
+if (API) {
+  console.log('reply begins');
+  const errorLabel = document.getElementById('error-msg')
+
+  API.onRegisterSuccess((event, message) => {
+    console.log("onRegisterSucess");
+    console.log(message);
+    // API.loadPlusView();
+  });
+
+  API.onRegisterFailure((event, message) => {
+    console.log("onRegisterFailure");
+    console.error(message); // Handle registration failure
+    errorLabel.innerHTML = message;
+  });
+
+  API.onLoginSuccess((event, message) => {
+    console.log("onLoginSucess");
+    console.log(message); // Handle successful login
+    // API.loadPlusView();
+  });
+
+  API.onLoginFailure((event, message) => {
+    console.log("onLoginFailure");
+    console.error(message); // Handle login failure
+    errorLabel.innerHTML = message;
   });
 } else {
-  console.error('electronAPI is not available');
+  console.error('Electron APIs are not available.');
 }
-
-document.getElementById('loginButton').addEventListener('click', () => {
-  const email = document.getElementById('emailInput').value;
-  const password = document.getElementById('passwordInput').value;
-
-  if (window['electronAPI']) {
-    window['electronAPI'].sendRegister({ email, password });
-  } else {
-    console.error('electronAPI is not available');
-  }
-});

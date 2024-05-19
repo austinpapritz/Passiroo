@@ -15,14 +15,22 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
       enableRemoteModule: false,
-    },
+    }
     // Uncomment if you want to hide the title bar:
-    titleBarStyle: 'hidden'
+    // titleBarStyle: 'hidden'
   });
   mainWindow.loadFile('app/views/register.html');
   // Uncomment to open the DevTools:
   // mainWindow.webContents.openDevTools();
 }
+
+ipcMain.on('loadPlusView', () => {
+  if (mainWindow) {
+    mainWindow.loadFile('app/views/plus.html');
+  } else {
+    console.error('Main window is not available.');
+  }
+});
 
 ipcMain.on('resize-window', (event, { width, height }) => {
   if (mainWindow) { // Check if mainWindow is available
@@ -39,24 +47,30 @@ ipcMain.on('register', (event, userData) => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
   const pyProcess = spawn('python', [pythonScriptPath, 'register_user', userData.username, userData.password]);
 
-  pyProcess.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
+  let dataString = '';
+  pyProcess.stdout.on('data', (data) => {
+    dataString += data.toString();
   });
   
   pyProcess.on('close', (code) => {
-    console.log(`Python script exited with code ${code}`);
-    if (code === 0) {
-      event.reply('register-success', 'User registered successfully');
-    } else {
-      event.reply('register-failure', 'Failed to register user');
+    try {
+      const result = JSON.parse(dataString);
+      if (result.status === 'success') {
+        event.reply('register-success', 'User registered successfully');
+      } else {
+        event.reply('register-failure', result.message);
+      }
+    } catch (error) {
+      event.reply('register-failure', 'Failed to parse response');
     }
   });
 });
 
 ipcMain.on('login', (event, userData) => {
+  console.log('start login')
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
   const pyProcess = spawn('python', [pythonScriptPath, 'login_user', userData.username, userData.password]);
-
+  console.log('spawn')
   pyProcess.stderr.on('data', (data) => {
     console.error(`stderr: ${data}`);
   });
@@ -69,4 +83,5 @@ ipcMain.on('login', (event, userData) => {
       event.reply('login-failure', 'Failed to log in');
     }
   });
+  console.log('close')
 });
