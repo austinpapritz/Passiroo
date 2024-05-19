@@ -1,8 +1,6 @@
 // This file makes it so that only necessary Node.js functions are exposed
 const { contextBridge, ipcRenderer } = require('electron');
 
-console.log('preload start');
-
 contextBridge.exposeInMainWorld('electronAPI', {
   resizeWindow: (width, height) => ipcRenderer.send('resize-window', { width, height }),
   sendRegister: (data) => ipcRenderer.send('register', data),

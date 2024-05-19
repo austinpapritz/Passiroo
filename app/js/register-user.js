@@ -19,7 +19,6 @@ const API = window['electronAPI'];
 
 // Handle login.
 document.getElementById('loginButton').addEventListener('click', () => {
-  console.log('click')
   const email = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
 
@@ -60,7 +59,6 @@ document.getElementById('registerButton').addEventListener('click', (e) => {
 
   if (API) {
     if (email.value && password.value) {
-      console.log('email.value', email.value);
       API.sendRegister({ email: email.value, password: password.value });
     } else {
       console.error('please enter a valid email and password')
@@ -70,7 +68,6 @@ document.getElementById('registerButton').addEventListener('click', (e) => {
   }
 });
 
-console.log('reply about to')
 if (API) {
   const errorLabel = document.getElementById('error-msg')
 
@@ -80,7 +77,7 @@ if (API) {
   });
 
   API.onRegisterFailure((event, message) => {
-    console.log(message); // Handle registration failure
+    (message); // Handle registration failure
     errorLabel.innerHTML = message;
   });
 
