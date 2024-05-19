@@ -16,21 +16,22 @@ html, * {
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+  color: #fff;
 }
 
 body {
   position: relative;
   width: 100%;
   min-height: 100%;
-  background: transparent;
-  color: #fff;
+  background: transparent !important; 
   font-size: 1.2rem;
 }
 
 .grid {
   display: grid;
-  grid-template-rows: 160px 160px 160px 160px;
-  width: 175px;
+  grid-template-columns: 200px;
+  grid-template-rows: repeat(4, 160px);
+  width: 100%;
   height: 100vh;
   margin: auto;
 }
@@ -54,6 +55,7 @@ body {
 }
 
 .plus {
+  opacity: 0;
   grid-area: 2 / 1 / 3 / 2;
   background: rgb(0, 205, 223);
   display: flex;
@@ -67,6 +69,7 @@ body {
 }
 
 .search {
+  opacity: 0;
   grid-area: 3 / 1 / 4 / 2;
   background: rgb(234, 182, 46);
   display: flex;
@@ -82,6 +85,7 @@ body {
 }
 
 .about {
+  opacity: 0;
   grid-area: 4 / 1 / 5 / 2;
   background: rgb(223, 97, 61);
   display: flex;
@@ -114,14 +118,41 @@ body {
   background: rgb(52, 51, 48, 75%);
 }
 
+.invalid-feedback {
+  height: 
+}
+
 button {
   padding: 5px;
   width: 60%;
-  background: rgb(234, 182, 46);
+  background: rgb(234, 182, 46) !important;
   color: #fff;
   font-size: 1.5rem;
   font-weight: 700;
-  border-radius: 40px;
-  border: solid #fff 3px;;
+  border-radius: 40px !important;
+  border: solid #fff 3px !important;
   box-shadow: 0px 2px 3px 1px rgba(0, 0, 0, .25)
+}
+
+@keyframes slideOut {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  100% {
+    height: 100%;
+    opacity: 1;
+  }
+}
+
+.plus, .search, .about {
+  animation: slideOut 0.4s ease-in-out forwards;
+}
+
+.search {
+  animation-delay: 0.4s; /* Starts one second after page load */
+}
+
+.about {
+  animation-delay: 0.8s; /* Starts 1.5 seconds after page load */
 }

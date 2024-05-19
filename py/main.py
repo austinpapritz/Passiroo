@@ -5,6 +5,8 @@ from cryptography.fernet import Fernet
 from models.password_manager import PasswordManager
 from models.user_manager import UserManager
 
+from initialize_db import create_database
+
 # Establish a database connection
 db_connection = sqlite3.connect('passiroo.db')
 
@@ -15,30 +17,38 @@ db_connection = sqlite3.connect('passiroo.db')
 # Create an instance of UserManager
 user_manager = UserManager(db_connection)
 
+create_database()
+
 def register_user(email, password):
     try:
-        user_manager.register_user(email, password)
-        return json.dumps({"status": "success"})
+        result = user_manager.register_user(email, password)
+        if result:
+            return json.dumps({"status": "success"})
+        else:
+            return json.dumps({"status": "error", "message": "Registration failed"})
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
 
-if __name__ == '__main__':
-    action = sys.argv[1]
-    if action == 'register_user':
-        email = sys.argv[2]
-        password = sys.argv[3]
-        print(register_user(email, password))
 
 def login_user(email, password):
+    # Catch for logging in without credentials
+    if not email or not password:
+        return json.dumps({"status": "error", "message": "Email and password must be provided"})
+      
     try:
-        user_manager.login_user(email, password)
-        return json.dumps({"status": "success"})
+        result = user_manager.login_user(email, password)
+        if result:
+            return json.dumps({"status": "success"})
+        else:
+            return json.dumps({"status": "error", "message": "Login failed"})
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
 
 if __name__ == '__main__':
     action = sys.argv[1]
-    if action == 'login_user':
-        email = sys.argv[2]
-        password = sys.argv[3]
+    email = sys.argv[2]
+    password = sys.argv[3]
+    if action == 'register_user':
+        print(register_user(email, password))
+    elif action == 'login_user':
         print(login_user(email, password))
