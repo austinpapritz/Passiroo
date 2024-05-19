@@ -75,13 +75,11 @@ if (API) {
   const errorLabel = document.getElementById('error-msg')
 
   API.onRegisterSuccess((event, message) => {
-    console.log("onRegisterSucess");
     console.log(message);
     API.loadPlusView();
   });
 
   API.onRegisterFailure((event, message) => {
-    console.log("onRegisterFailure");
     console.log(message); // Handle registration failure
     errorLabel.innerHTML = message;
   });
@@ -91,7 +89,6 @@ if (API) {
   });
 
   API.onLoginFailure((event, message) => {
-    console.log("onLoginFailure");
     console.log(message); // Handle login failure
     errorLabel.innerHTML = message;
   });
