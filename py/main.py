@@ -31,6 +31,10 @@ def register_user(email, password):
 
 
 def login_user(email, password):
+    # Catch for logging in without credentials
+    if not email or not password:
+        return json.dumps({"status": "error", "message": "Email and password must be provided"})
+      
     try:
         result = user_manager.login_user(email, password)
         if result:

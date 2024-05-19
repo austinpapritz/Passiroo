@@ -67,10 +67,8 @@ ipcMain.on('register', (event, userData) => {
 });
 
 ipcMain.on('login', (event, userData) => {
-  console.log('start login')
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
   const pyProcess = spawn('python', [pythonScriptPath, 'login_user', userData.username, userData.password]);
-  console.log('spawn')
   pyProcess.stderr.on('data', (data) => {
     console.error(`stderr: ${data}`);
   });
@@ -83,5 +81,4 @@ ipcMain.on('login', (event, userData) => {
       event.reply('login-failure', 'Failed to log in');
     }
   });
-  console.log('close')
 });
