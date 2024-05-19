@@ -37,18 +37,21 @@ class UserManager(object):
         cursor = self.db_connection.cursor()
         cursor.execute("SELECT hashed_password FROM users WHERE email=?", (email,))
         result = cursor.fetchone()
+        print('result of email match', result)
         if result is None:
             return False  # False if User not found
 
         stored_hashed_password = result[0]
         pw_check_bool = bcrypt.checkpw(provided_password.encode(), stored_hashed_password)
+        print('pw check', pw_check_bool)
         if pw_check_bool is True:
             user_id = self.get_user_id_by_email(email)
             if user_id:
+              print('user_id', user)
               UserManager.current_user_id = user_id
               return True
             else: 
-              return None
+              return False
         else:
             return False
 
