@@ -1,5 +1,14 @@
 const API = window['electronAPI'];
 
+// Handle tab clicks to load respective views.
+document.getElementById('aboutPage').addEventListener('click', () => {
+  API.loadAboutView();
+});
+
+document.getElementById('searchPage').addEventListener('click', () => {
+  API.loadSearchView();
+});
+
 // Highlight selected special characters.
 document.querySelectorAll('.spec-char-li').forEach(li => {
   li.addEventListener('click', () => {
