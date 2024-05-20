@@ -28,12 +28,41 @@ function createWindow() {
   // mainWindow.webContents.openDevTools();
 }
 
-ipcMain.on('loadPlusView', () => {
-  if (mainWindow) {
-    mainWindow.loadFile('app/views/plus.html');
-  } else {
-    console.error('Main window is not available.');
-  }
+app.on('ready', createWindow);
+
+ipcMain.on('addPassword', (event, { website, email, password }) => {
+  const pythonScriptPath = path.join(__dirname, '../../py/main.py');
+  const pyProcess = spawn('python', [pythonScriptPath, 'add_password', website, email, password]);
+
+  pyProcess.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  pyProcess.on('close', (code) => {
+    if (code === 0) {
+      event.reply('add-password-success', 'Password added successfully');
+    } else {
+      event.reply('add-password-failure', 'Failed to add password');
+    }
+  });
+});
+
+ipcMain.on('generateRandomPassword', (event, { specChars, pwLength }) => {
+  const pythonScriptPath = path.join(__dirname, '../../py/main.py');
+  const pyProcess = spawn('python', [pythonScriptPath, 'generate_random_password', specChars, pwLength]);
+
+  pyProcess.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  pyProcess.stdout.on('data', (data) => {
+    const result = JSON.parse(data.toString());
+    if (result.status === 'success') {
+      event.reply('generate-random-password-success', { password: result.password });
+    } else {
+      event.reply('generate-random-password-failure', result.message);
+    }
+  });
 });
 
 ipcMain.on('resize-window', (event, { width, height }) => {
@@ -45,7 +74,13 @@ ipcMain.on('resize-window', (event, { width, height }) => {
   }
 });
 
-app.on('ready', createWindow);
+ipcMain.on('loadPlusView', () => {
+  if (mainWindow) {
+    mainWindow.loadFile('app/views/plus.html');
+  } else {
+    console.error('Main window is not available.');
+  }
+});
 
 ipcMain.on('register', (event, userData) => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
