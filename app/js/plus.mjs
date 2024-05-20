@@ -40,6 +40,22 @@ document.getElementById('addPasswordForm').addEventListener('submit', (event) =>
   }
 });
 
+// Update label when pwLength input changes.
+const pwLengthInput = document.querySelector('input[name="pwLength"]');
+const rangeLabel = document.getElementById('rangeLabel');
+
+pwLengthInput.addEventListener('input', (event) => {
+  const value = event.target.value;
+  const labelTextNode = rangeLabel.firstChild;
+
+  // Update the text node with the new value
+  if (labelTextNode) {
+    labelTextNode.nodeValue = value;
+  } else {
+    rangeLabel.textContent = value;
+  }
+});
+
 // Handle generate random password.
 document.getElementById('generatePasswordButton').addEventListener('click', () => {
   const specChars = Array.from(document.querySelectorAll('.spec-char-li'))
