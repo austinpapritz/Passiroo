@@ -1,5 +1,13 @@
 const API = window['electronAPI'];
 
+// Highlight selected special characters.
+document.querySelectorAll('.spec-char-li').forEach(li => {
+  li.addEventListener('click', () => {
+    console.log('clicked');
+    li.classList.toggle('selected');
+  });
+});
+
 // Handle form submission for adding a password.
 document.getElementById('addPasswordForm').addEventListener('submit', (event) => {
   event.preventDefault(); // Prevent the default form submission
@@ -39,12 +47,6 @@ document.getElementById('generatePasswordButton').addEventListener('click', () =
   }
 });
 
-// Highlight selected special characters
-document.querySelectorAll('.spec-char-li').forEach(li => {
-  li.addEventListener('click', () => {
-    li.classList.toggle('selected');
-  });
-});
 
 // Listen for the backend responses
 if (API) {

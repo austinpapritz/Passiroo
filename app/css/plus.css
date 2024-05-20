@@ -14,8 +14,9 @@
   box-sizing: border-box;
   font-family: "Quicksand", sans-serif;
   font-optical-sizing: auto;
-  font-weight: <weight>;
+  font-weight: 400;
   font-style: normal;
+  color: #fff;
 }
 
 body {
@@ -61,7 +62,7 @@ body {
   align-items: center;
   border-radius: 0 40px 40px 0;
   box-shadow: 6px 0px 15px 3px rgba(0, 0, 0, .30);
-  z-index: 30;
+  z-index: 40;
 }
 
 .search {
@@ -72,7 +73,7 @@ body {
   align-items: center;
   border-radius: 0 40px 40px 0;
   box-shadow: 6px 0 15px 3px rgba(0, 0, 0, .30);
-  z-index: 20;
+  z-index: 30;
 }
 
 .about {
@@ -83,7 +84,7 @@ body {
   align-items: center;
   border-radius: 0 40px 40px 0;
   box-shadow: 6px 0px 15px 3px rgba(0, 0, 0, .30);
-  z-index: 10;
+  z-index: 20;
 }
 
 .top {
@@ -97,19 +98,7 @@ body {
   z-index: -10;
   transform: translateX(-8%);
   padding-left: 8%;
-}
-
-.middle {
-  grid-area: 3 / 2 / 4 / 3;
-  background: rgb(0, 205, 223);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  z-index: -10;
-  transform: translateX(-8%);
-  padding-left: 8%;
+  z-index: 15;
 }
 
 .bottom {
@@ -121,6 +110,7 @@ body {
   z-index: -10;
   transform: translateX(-8%);
   padding-left: 8%;
+  z-index: 15;
 }
 
 .top h3 {
@@ -183,7 +173,7 @@ body {
   width: 25px;
   display: flex;
   justify-content: center;
-  align-items: center
+  align-items: center;
 }
 
 .plus-btn {
@@ -223,4 +213,8 @@ body {
   border: none;
   border-radius: 20px;
   background: rgb(52, 51, 48, 75%);
+}
+
+.spec-char-list .selected {
+  background: rgb(234, 182, 46, 0.75)
 }
