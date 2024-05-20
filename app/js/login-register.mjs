@@ -4,21 +4,35 @@ const API = window['electronAPI'];
 (function() {
   'use strict';
   window.addEventListener('load', function() {
-    var forms = document.getElementsByClassName('needs-validation');
-    Array.prototype.filter.call(forms, function(form) {
+    let q;
+    document.getElementsByID('loginButton').addEventListener('Click') = () => {
+      q = "login"
+    }
+    document.getElementsByID('registerButton').addEventListener('Click') = () => {
+      q = "register"
+    }
+    var form = document.getElementsByClassName('needs-validation');
       form.addEventListener('submit', function(event) {
-        if (!form.checkValidity()) {
+        if (form.checkValidity() === false) {
           event.preventDefault();
           event.stopPropagation();
+          return;
+        } else {
+          if (q === "register") {
+            handleRegister(event);
+          } else if (q === "register") {
+            handleLogin(event);
+          }
         }
         form.classList.add('was-validated');
       }, false);
     });
   }, false);
-})();
+
 
 // Handle login.
-document.getElementById('loginButton').addEventListener('click', () => {
+document.getElementById('loginButton').addEventListener('click', (e) => {
+  e.preventDefault();
   const email = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
 
@@ -41,6 +55,7 @@ document.getElementById('registerButton').addEventListener('click', (e) => {
   const email = document.getElementById('emailInput');
   const confirmPassword = document.getElementById('confirmPasswordInput');
   const password = document.getElementById('passwordInput');
+  const errorH3 = document.getElementById('error-msg');
 
   // Ensure confirmPasswordInput is required
   confirmPassword.setAttribute("required", "");
@@ -49,27 +64,28 @@ document.getElementById('registerButton').addEventListener('click', (e) => {
   if (passwordInput.value !== confirmPasswordInput.value) {
     // If they don't match, add Bootstrap's is-invalid class to show the error.
     confirmPassword.classList.add('is-invalid');
-    confirmPassword.nextElementSibling.innerHTML = "Passwords do not match."; // Assumes there is a div for feedback immediately following the input.
+    errorH3.innerHTML = "Passwords do not match."; // Assumes there is a div for feedback immediately following the input.
     return; // Stop the function from proceeding.
   } else {
     // If they match, remove any invalid class that might have been added previously.
     confirmPassword.classList.remove('is-invalid');
-  }
 
-
-  if (API) {
-    if (email.value && password.value) {
-      API.sendRegister({ email: email.value, password: password.value });
+    if (API) {
+      if (email.value && password.value) {
+        API.sendRegister({ email: email.value, password: password.value });
+      } else {
+        console.error('please enter a valid email and password')
+      }
     } else {
-      console.error('please enter a valid email and password')
+      console.error('electronAPI is not available');
     }
-  } else {
-    console.error('electronAPI is not available');
-  }
+  }; 
 });
 
+
+
 if (API) {
-  const errorLabel = document.getElementById('error-msg')
+  const errorH3 = document.getElementById('error-msg')
 
   API.onRegisterSuccess((event, message) => {
     console.log(message);
@@ -78,7 +94,7 @@ if (API) {
 
   API.onRegisterFailure((event, message) => {
     (message); // Handle registration failure
-    errorLabel.innerHTML = message;
+    errorH3.innerHTML = message;
   });
 
   API.onLoginSuccess((event, message) => {
@@ -87,7 +103,7 @@ if (API) {
 
   API.onLoginFailure((event, message) => {
     console.log(message); // Handle login failure
-    errorLabel.innerHTML = message;
+    errorH3.innerHTML = message;
   });
 } else {
   console.error('Electron APIs are not available.');

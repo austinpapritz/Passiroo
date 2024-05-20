@@ -54,6 +54,11 @@ class UserManager(object):
         return {"status": "success"}
 
     def login_user(self, email, provided_password):
+        try:
+            self.password_validator(provided_password)
+        except ValueError as e:
+            return {"status": "error", "message": str(e)}
+          
         cursor = self.db_connection.cursor()
         cursor.execute("SELECT hashed_password FROM users WHERE email=?", (email,))
         result = cursor.fetchone()

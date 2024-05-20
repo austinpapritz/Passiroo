@@ -1,7 +1,12 @@
-const { ipcMain } = require('electron');
-const { spawn } = require('child_process');
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
+import { ipcMain, app, BrowserWindow } from 'electron';
+import { spawn } from 'child_process';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Define __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 let mainWindow;
 
@@ -45,40 +50,44 @@ app.on('ready', createWindow);
 
 ipcMain.on('register', (event, userData) => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
-  const pyProcess = spawn('python', [pythonScriptPath, 'register_user', userData.username, userData.password]);
+  const pyProcess = spawn('python', [pythonScriptPath, 'register_user', userData.email, userData.password]);
 
-  let dataString = '';
   pyProcess.stdout.on('data', (data) => {
-    dataString += data.toString();
-  });
-  
-  pyProcess.on('close', (code) => {
-    try {
-      const result = JSON.parse(dataString);
-      if (result.status === 'success') {
-        event.reply('register-success', 'User registered successfully');
-      } else {
-        event.reply('register-failure', result.message);
-      }
-    } catch (error) {
-      event.reply('register-failure', 'Failed to parse response');
+    const response = JSON.parse(data.toString());
+    if (response.status === 'success') {
+      event.reply('register-success', 'User registered successfully');
+    } else {
+      event.reply('register-failure', response.message);
     }
   });
-});
 
-ipcMain.on('login', (event, userData) => {
-  const pythonScriptPath = path.join(__dirname, '../../py/main.py');
-  const pyProcess = spawn('python', [pythonScriptPath, 'login_user', userData.username, userData.password]);
   pyProcess.stderr.on('data', (data) => {
     console.error(`stderr: ${data}`);
   });
 
   pyProcess.on('close', (code) => {
     console.log(`Python script exited with code ${code}`);
-    if (code === 0) {
+  });
+});
+
+ipcMain.on('login', (event, userData) => {
+  const pythonScriptPath = path.join(__dirname, '../../py/main.py');
+  const pyProcess = spawn('python', [pythonScriptPath, 'login_user', userData.email, userData.password]);
+
+  pyProcess.stdout.on('data', (data) => {
+    const response = JSON.parse(data.toString());
+    if (response.status === 'success') {
       event.reply('login-success', 'User logged in successfully');
     } else {
-      event.reply('login-failure', 'Failed to log in');
+      event.reply('login-failure', response.message);
     }
+  });
+
+  pyProcess.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  pyProcess.on('close', (code) => {
+    console.log(`Python script exited with code ${code}`);
   });
 });
