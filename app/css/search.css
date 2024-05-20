@@ -14,8 +14,9 @@
 	box-sizing: border-box;
 	font-family: "Quicksand", sans-serif;
 	font-optical-sizing: auto;
-	font-weight: <weight>;
+	font-weight: 400;
 	font-style: normal;
+  color: #fff
 }
 
 body {
@@ -23,7 +24,6 @@ body {
 	width: 100%;
 	min-height: 100%;
 	background: #121112;
-	color: #fff;
 	font-size: 1.2rem;
 }
 
@@ -219,64 +219,6 @@ body {
 	background: rgb(52, 51, 48, 75%);
 }
 
-/* The container must be positioned relative: */
-.custom-select {
-	position: relative;
-}
-
-.custom-select select {
-	display: none; /*hide original SELECT element: */
-}
-
-.select-selected {
-	background-color: rgb(52, 51, 48, 75%);
-	border-radius: 40px;
-}
-
-/* Style the arrow inside the select element: */
-.select-selected:after {
-	position: absolute;
-	content: "";
-	top: 18px;
-	right: 20px;
-	width: 0;
-	height: 0;
-	border: 10px solid transparent;
-	border-color: #fff transparent transparent transparent;
-}
-
-/* Point the arrow upwards when the select box is open (active): */
-.select-selected.select-arrow-active:after {
-	border-color: transparent transparent #fff transparent;
-	top: 7px;
-}
-
-/* style the items (options), including the selected item: */
-.select-items div,
-.select-selected {
-	color: #ffffff;
-	padding: 8px 16px;
-	border: 1px solid transparent;
-	border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
-	cursor: pointer;
-}
-
-/* Style items (options): */
-.select-items {
-	position: absolute;
-	background-color: DodgerBlue;
-	top: 100%;
-	left: 0;
-	right: 0;
-	z-index: 99;
-}
-
-/* Hide the items when the select box is closed: */
-.select-hide {
-	display: none;
-}
-
-.select-items div:hover,
-.same-as-selected {
-	background-color: rgba(0, 0, 0, 0.1);
+.hidden {
+  display: none;
 }
