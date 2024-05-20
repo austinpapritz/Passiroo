@@ -215,3 +215,7 @@ body {
   border-radius: 20px;
   background: rgb(52, 51, 48, 75%);
 }
+
+.hidden {
+  display: none;
+}

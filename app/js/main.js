@@ -19,7 +19,7 @@ function createWindow() {
     // Uncomment if you want to hide the title bar:
     // titleBarStyle: 'hidden'
   });
-  mainWindow.loadFile('app/views/register.html');
+  mainWindow.loadFile('app/views/login-register.html');
   // Uncomment to open the DevTools:
   // mainWindow.webContents.openDevTools();
 }

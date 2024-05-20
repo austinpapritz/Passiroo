@@ -11,12 +11,12 @@
     </li>
     <li class="plus">
       <svg 
-           xmlns="http://www.w3.org/2000/svg" 
-           fill="none" 
-           viewBox="0 0 24 24" 
-           strokeWidth={1.5} 
-           stroke="currentColor" 
-           class="w-6 h-6 svg-large">
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          strokeWidth={1.5} 
+          stroke="currentColor" 
+          class="w-6 h-6 svg-large">
           <defs>
             <filter id="dropShadowLarge" x="0" y="0">
               <feDropShadow 
@@ -34,12 +34,12 @@
     </li>
     <li class="search">
       <svg 
-           xmlns="http://www.w3.org/2000/svg" 
-           fill="none" 
-           viewBox="0 0 24 24" 
-           strokeWidth={1.5} 
-           stroke="currentColor" 
-           class="w-6 h-6 svg-large">
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          strokeWidth={1.5} 
+          stroke="currentColor" 
+          class="w-6 h-6 svg-large">
         <path 
               strokeLinecap="round" 
               strokeLinejoin="round" 
@@ -49,12 +49,12 @@
     </li>
     <li class="about">
       <svg 
-           xmlns="http://www.w3.org/2000/svg" 
-           fill="none" 
-           viewBox="0 0 24 24" 
-           strokeWidth={1.5} 
-           stroke="currentColor" 
-           class="w-6 h-6 svg-large">
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          strokeWidth={1.5} 
+          stroke="currentColor" 
+          class="w-6 h-6 svg-large">
         <path 
               strokeLinecap="round" 
               strokeLinejoin="round" 
@@ -67,15 +67,14 @@
       <input 
             type="text"
             placeholder="website" />
-      <input 
-            type="text"
-            placeholder="account name" />
+      <label for="accountName">account name</label>
     </div>
     <div class="middle">
       <input 
             type="text"
             placeholder="password" />
       <input 
+            className="hidden"
             type="text"
             placeholder="confirm password" />
     </div>
@@ -141,8 +140,10 @@
           </svg>
       </div>
     </div>
-  </div>
 </div>
-  </div>
+  <script src="../js/plus.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
