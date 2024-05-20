@@ -14,7 +14,7 @@
   box-sizing: border-box;
   font-family: "Quicksand", sans-serif;
   font-optical-sizing: auto;
-  font-weight: 400;
+  font-weight: <weight>;
   font-style: normal;
 }
 
@@ -87,7 +87,7 @@ body {
 }
 
 .top {
-  grid-area: 2 / 2 / 3 / 3;
+  grid-area: 2 / 2 / 4 / 3;
   background: rgb(0, 205, 223);
   display: flex;
   flex-direction: column;
@@ -128,6 +128,16 @@ body {
   font-weight: 700;
 }
 
+.top form {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
 .svg-large {
   fill: none;
   stroke: currentColor;
@@ -150,8 +160,15 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 5px;
 }
+
+.spec-char-form {
+  background: rgb(52, 51, 48, 75%);
+  width: 100%;
+  height: 100%;
+}
+
 .spec-char-list {
   list-style-type: none;
   display: flex;
@@ -169,31 +186,23 @@ body {
   align-items: center
 }
 
-.buttons-container {
-  height: 100%;
-  padding: 0.5em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-  gap: 15px;
+.plus-btn {
+  scale: 1;
+  padding: 10px;
+  margin-bottom: 5px;
+  border: solid #fff 4px;
+  border-radius: 250px;
+  background: rgb(52, 51, 48, 25%)
 }
 
+
 .sparkles {
-  scale: 2.5;
+  scale: 1.2;
   padding: 5px;
   color: rgb(234, 182, 46);
   background: rgb(52, 51, 48, 25%);
   border: solid #fff 2px;
   border-radius: 50px;
-}
-
-.plus-btn {
-  scale: 2.5;
-  padding: 5px;
-  border: solid #fff 2px;
-  border-radius: 50px;
-  background: rgb(52, 51, 48, 25%)
 }
 
 .top input {
@@ -214,8 +223,4 @@ body {
   border: none;
   border-radius: 20px;
   background: rgb(52, 51, 48, 75%);
-}
-
-.hidden {
-  display: none;
 }
