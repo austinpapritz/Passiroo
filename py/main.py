@@ -20,29 +20,12 @@ user_manager = UserManager(db_connection)
 create_database()
 
 def register_user(email, password):
-    try:
-        result = user_manager.register_user(email, password)
-        if result:
-            return json.dumps({"status": "success"})
-        else:
-            return json.dumps({"status": "error", "message": "Registration failed"})
-    except Exception as e:
-        return json.dumps({"status": "error", "message": str(e)})
-
+    result = user_manager.register_user(email, password)
+    return json.dumps(result)
 
 def login_user(email, password):
-    # Catch for logging in without credentials
-    if not email or not password:
-        return json.dumps({"status": "error", "message": "Email and password must be provided"})
-      
-    try:
-        result = user_manager.login_user(email, password)
-        if result:
-            return json.dumps({"status": "success"})
-        else:
-            return json.dumps({"status": "error", "message": "Login failed"})
-    except Exception as e:
-        return json.dumps({"status": "error", "message": str(e)})
+    result = user_manager.login_user(email, password)
+    return json.dumps(result)
 
 if __name__ == '__main__':
     action = sys.argv[1]
