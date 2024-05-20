@@ -19,21 +19,15 @@ const API = window['electronAPI'];
 
 // Handle login.
 document.getElementById('loginButton').addEventListener('click', () => {
-  console.log('click')
   const email = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
 
   if (API) {
-    if (email && password) {
-      API.sendLogin({ email, password });
-    } else {
-      console.error('please provide a valid email and password')
-    }
+    API.sendLogin({ email, password });
   } else {
     console.error('electronAPI is not available');
   }
 });
-
 
 // Handle register.
 document.getElementById('registerButton').addEventListener('click', (e) => {
@@ -46,53 +40,44 @@ document.getElementById('registerButton').addEventListener('click', (e) => {
   // Ensure confirmPasswordInput is required
   confirmPassword.setAttribute("required", "");
 
-  // Check if the password matches the confirm password.
+  // Check if the password matches the confirm password
   if (passwordInput.value !== confirmPasswordInput.value) {
-    // If they don't match, add Bootstrap's is-invalid class to show the error.
-    confirmPassword.classList.add('is-invalid');
-    confirmPassword.nextElementSibling.innerHTML = "Passwords do not match."; // Assumes there is a div for feedback immediately following the input.
-    return; // Stop the function from proceeding.
+    // If they don't match, add Bootstrap's is-invalid class to show the error
+    confirmPasswordInput.classList.add('is-invalid');
+    confirmPasswordInput.nextElementSibling.innerHTML = "Passwords do not match."; // Assumes there is a div for feedback immediately following the input
+    return; // Stop the function from proceeding
   } else {
-    // If they match, remove any invalid class that might have been added previously.
-    confirmPassword.classList.remove('is-invalid');
+    // If they match, remove any invalid class that might have been added previously
+    confirmPasswordInput.classList.remove('is-invalid');
   }
 
-
   if (API) {
-    if (email.value && password.value) {
-      console.log('email.value', email.value);
-      API.sendRegister({ email: email.value, password: password.value });
-    } else {
-      console.error('please enter a valid email and password')
-    }
+    API.sendRegister({ email: email.value, password: password.value });
   } else {
     console.error('electronAPI is not available');
   }
 });
 
-console.log('reply about to')
 if (API) {
-  const errorLabel = document.getElementById('error-msg')
+  const errorLabel = document.getElementById('error-msg');
 
   API.onRegisterSuccess((event, message) => {
-    console.log("onRegisterSucess");
     console.log(message);
     API.loadPlusView();
   });
 
   API.onRegisterFailure((event, message) => {
-    console.log("onRegisterFailure");
-    console.log(message); // Handle registration failure
+    console.error(message); // Handle registration failure
     errorLabel.innerHTML = message;
   });
 
   API.onLoginSuccess((event, message) => {
+    console.log(message); // Handle successful login
     API.loadPlusView();
   });
 
   API.onLoginFailure((event, message) => {
-    console.log("onLoginFailure");
-    console.log(message); // Handle login failure
+    console.error(message); // Handle login failure
     errorLabel.innerHTML = message;
   });
 } else {
