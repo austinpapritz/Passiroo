@@ -28,6 +28,30 @@ function createWindow() {
   // mainWindow.webContents.openDevTools();
 }
 
+ipcMain.on('loadPlusView', () => {
+  if (mainWindow) {
+    mainWindow.loadFile('app/views/plus.html');
+  } else {
+    console.error('Main window is not available.');
+  }
+});
+
+ipcMain.on('loadAboutView', () => {
+  if (mainWindow) {
+    mainWindow.loadFile('app/views/about.html');
+  } else {
+    console.error('Main window is not available.');
+  }
+});
+
+ipcMain.on('loadSearchView', () => {
+  if (mainWindow) {
+    mainWindow.loadFile('app/views/search.html');
+  } else {
+    console.error('Main window is not available.');
+  }
+});
+
 app.on('ready', createWindow);
 
 ipcMain.on('addPassword', (event, { website, email, password }) => {

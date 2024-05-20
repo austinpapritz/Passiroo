@@ -16,6 +16,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   addPassword: (data) => ipcRenderer.send('addPassword', data),
   onAddPasswordSuccess: (callback) => ipcRenderer.on('add-password-success', callback),
   onAddPasswordFailure: (callback) => ipcRenderer.on('add-password-failure', callback),
+
+  loadPlusView: () => ipcRenderer.send('loadPlusView'),
+  loadAboutView: () => ipcRenderer.send('loadAboutView'),
+  loadSearchView: () => ipcRenderer.send('loadSearchView'),
   
   generateRandomPassword: (data) => ipcRenderer.send('generateRandomPassword', data),
   onGenerateRandomPasswordSuccess: (callback) => ipcRenderer.on('generate-random-password-success', callback),

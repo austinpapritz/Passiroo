@@ -65,6 +65,10 @@ body {
   z-index: 40;
 }
 
+.plus:hover {
+  cursor: pointer;
+}
+
 .search {
   grid-area: 3 / 1 / 4 / 2;
   background: rgb(234, 182, 46);
@@ -76,6 +80,10 @@ body {
   z-index: 30;
 }
 
+.search:hover {
+  cursor: pointer;
+}
+
 .about {
   grid-area: 4 / 1 / 5 / 2;
   background: rgb(223, 97, 61);
@@ -85,6 +93,10 @@ body {
   border-radius: 0 40px 40px 0;
   box-shadow: 6px 0px 15px 3px rgba(0, 0, 0, .30);
   z-index: 20;
+}
+
+.about:hover {
+  cursor: pointer;
 }
 
 .top {

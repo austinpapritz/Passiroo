@@ -14,7 +14,7 @@
 	box-sizing: border-box;
 	font-family: "Quicksand", sans-serif;
 	font-optical-sizing: auto;
-	font-weight: 400;
+	font-weight: <weight>;
 	font-style: normal;
 }
 
@@ -61,7 +61,11 @@ body {
 	align-items: center;
 	border-radius: 0 40px 40px 0;
 	box-shadow: 6px 0px 15px 3px rgba(0, 0, 0, 0.3);
-	z-index: 30;
+	z-index: 40;
+}
+
+.plus:hover {
+  cursor: pointer;
 }
 
 .search {
@@ -72,7 +76,11 @@ body {
 	align-items: center;
 	border-radius: 0 40px 40px 0;
 	box-shadow: 6px 0 15px 3px rgba(0, 0, 0, 0.3);
-	z-index: 20;
+	z-index: 30;
+}
+
+.search:hover {
+  cursor: pointer;
 }
 
 .about {
@@ -83,19 +91,22 @@ body {
 	align-items: center;
 	border-radius: 0 40px 40px 0;
 	box-shadow: 6px 0px 15px 3px rgba(0, 0, 0, 0.3);
-	z-index: 10;
+	z-index: 20;
+}
+
+.about:hover {
+  cursor: pointer;
 }
 
 .top {
 	grid-area: 2 / 2 / 4 / 3;
 	background: rgb(223, 97, 61);
 	display: flex;
-	justify-content: center;
 	align-items: center;
-	gap: 10px;
-	z-index: -10;
+	justify-content: center;
 	transform: translateX(-8%);
 	padding-left: 8%;
+  z-index: -15;
 }
 
 .bottom {
@@ -104,9 +115,9 @@ body {
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	z-index: -10;
 	transform: translateX(-8%);
 	padding-left: 8%;
+  z-index: 15;
 }
 
 .top h3 {
@@ -115,11 +126,24 @@ body {
 	font-weight: 700;
 }
 
-.top p {
+.top .about-container {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.headshot {
+  margin: 0;
+  padding: 0;
+}
+
+.about-p {
+  height: 300px;
+  margin: 0;
+  padding: 10px;
 	width: 50%;
-	padding: 6px;
-	border-radius: 20px;
-	background: rgb(52, 51, 48, 75%)
+	border-radius: 0 20px 20px 0;
+	background: #130F0C
 }
 
 .svg-large {

@@ -1,5 +1,14 @@
 const API = window['electronAPI'];
 
+// Handle tab clicks to load respective views.
+document.getElementById('aboutPage').addEventListener('click', () => {
+  API.loadAboutView();
+});
+
+document.getElementById('searchPage').addEventListener('click', () => {
+  API.loadSearchView();
+});
+
 // Highlight selected special characters.
 document.querySelectorAll('.spec-char-li').forEach(li => {
   li.addEventListener('click', () => {
@@ -28,6 +37,22 @@ document.getElementById('addPasswordForm').addEventListener('submit', (event) =>
     API.addPassword({ website, email, password });
   } else {
     console.error('electronAPI is not available');
+  }
+});
+
+// Update label when pwLength input changes.
+const pwLengthInput = document.querySelector('input[name="pwLength"]');
+const rangeLabel = document.getElementById('rangeLabel');
+
+pwLengthInput.addEventListener('input', (event) => {
+  const value = event.target.value;
+  const labelTextNode = rangeLabel.firstChild;
+
+  // Update the text node with the new value
+  if (labelTextNode) {
+    labelTextNode.nodeValue = value;
+  } else {
+    rangeLabel.textContent = value;
   }
 });
 
