@@ -1,10 +1,12 @@
 const API = window['electronAPI'];
+const aboutPage = document.getElementById('aboutPage');
+const plusPage = document.getElementById('plusPage');
 
 // Handle tab clicks to load respective views.
-document.getElementById('aboutPage').addEventListener('click', () => {
+aboutPage.addEventListener('click', () => {
   API.loadAboutView();
 });
 
-document.getElementById('plusPage').addEventListener('click', () => {
+plusPage.addEventListener('click', () => {
   API.loadPlusView();
 });
