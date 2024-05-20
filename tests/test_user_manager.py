@@ -18,10 +18,42 @@ class TestUserManager(unittest.TestCase):
         """)
         self.user_manager = UserManager(self.connection)
 
+    def test_password_validator_short_password(self):
+        with self.assertRaises(ValueError) as context:
+            self.user_manager.password_validator("Short1!")
+        self.assertEqual(str(context.exception), "Password must be at least 11 characters long.")
+
+    def test_password_validator_no_uppercase(self):
+        with self.assertRaises(ValueError) as context:
+            self.user_manager.password_validator("lowercase1!")
+        self.assertEqual(str(context.exception), "Password must contain at least one uppercase letter.")
+
+    def test_password_validator_no_lowercase(self):
+        with self.assertRaises(ValueError) as context:
+            self.user_manager.password_validator("UPPERCASE1!!!")
+        self.assertEqual(str(context.exception), "Password must contain at least one lowercase letter.")
+
+    def test_password_validator_no_number(self):
+        with self.assertRaises(ValueError) as context:
+            self.user_manager.password_validator("NoNumberrrrr!")
+        self.assertEqual(str(context.exception), "Password must contain at least one number.")
+
+    def test_password_validator_no_special_character(self):
+        with self.assertRaises(ValueError) as context:
+            self.user_manager.password_validator("NoSpecial123")
+        self.assertEqual(str(context.exception), "Password must contain at least one special character (!@#&%^&._-).")
+
+    def test_password_validator_valid_password(self):
+        # This should not raise any exceptions
+        try:
+            self.user_manager.password_validator("ValidPass1!")
+        except ValueError:
+            self.fail("password_validator() raised ValueError unexpectedly!")
+            
     def test_userManager_login_user_setsCurrentUserId(self):
         # Assemble
         account_name = "sotesty@gmail.com"
-        password = "example_password"
+        password = "example_passworD123"
         self.user_manager.register_user(account_name, password) # runs login_user() after registering
 
         # Act
@@ -34,7 +66,7 @@ class TestUserManager(unittest.TestCase):
     def test_userManager_UserManager_delCurrentUserId(self):
         # Assemble
         account_name = "sotesty@gmail.com"
-        password = "example_password"
+        password = "example_passworD123"
         self.user_manager.register_user(account_name, password) # runs login_user() after registering
 
         # Act
@@ -48,7 +80,7 @@ class TestUserManager(unittest.TestCase):
 
     def test_userManager_hash_password_passwordDifferentThanHashed(self):
         # Assemble
-        password = "example_password"
+        password = "example_password#123"
         # Act
         hashed = self.user_manager.hash_password(password)
         # Assert
@@ -56,7 +88,7 @@ class TestUserManager(unittest.TestCase):
 
     def test_userManager_verify_password_hashedMatchesPassword(self):
         # Assemble
-        password = "example_password"
+        password = "example_passworD#123"
         #Act
         hashed = self.user_manager.hash_password(password)
         result = self.user_manager.verify_password(hashed, password)
@@ -66,7 +98,7 @@ class TestUserManager(unittest.TestCase):
     def test_userManager_register_user_checkDbForEmailAndPassword(self):
         # Assemble
         email = "test@example.com"
-        password = "testpassword123"
+        password = "testpassworD#123"
         self.user_manager.register_user(email, password)
         # Act
         cursor = self.connection.cursor()
@@ -80,7 +112,7 @@ class TestUserManager(unittest.TestCase):
     def test_userManager_login_user_checkValidLogin(self):
         # Assemble
         email = "login_test@example.com"
-        password = "testlogin123"
+        password = "testlogiN#123"
         # Act 
         self.user_manager.register_user(email, password)
         # Assert
@@ -89,7 +121,7 @@ class TestUserManager(unittest.TestCase):
     def test_userManager_login_user_checkInvalidLoginByPassword(self):
         # Assemble
         email = "login_test@example.com"
-        password = "testlogin123"
+        password = "testlogiN#123"
         # Act 
         self.user_manager.register_user(email, password)
         # Assert
@@ -98,7 +130,7 @@ class TestUserManager(unittest.TestCase):
     def test_userManager_login_user_checkInvalidLoginByEmail(self):
         # Assemble
         email = "login_test@example.com"
-        password = "testlogin123"
+        password = "testlogiN#123"
         # Act 
         self.user_manager.register_user(email, password)
         # Assert
@@ -107,7 +139,7 @@ class TestUserManager(unittest.TestCase):
     def test_userManager_get_user_id_by_email_checkUserIdIsInt(self):
         # Assemble
         email = "test@example.com"
-        password = "password123"
+        password = "passworD#123"
 
         # Act
         self.user_manager.register_user(email, password)
