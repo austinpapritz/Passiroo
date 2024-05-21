@@ -66,23 +66,18 @@
         <div class="site-search-container">
           <input type="text" id="siteSearch" onkeyup="filterSearch()" placeholder="Search for website.." />
           <ul id="site-ul">
-            <li>https://www.gmail.com</li>
-            <li>https://www.wikipedia.com</li>
-            <li>https://www.youtube.com</li>
           </ul>
         </div>
       </div>
       <div class="middle">
-        <select>
-          <option value="username1">username1</option>
-          <option value="username1">username2</option>
-          <option value="username1">username3</option>
+        <select name="account_name">
+          <option value="">choose account</option>
+          <option value="username1">email1/account name1</option>
+          <option value="username2">email2/account name2</option>
+          <option value="username3">email3/account name3</option>
         </select>
-    
-        <label>password</label>
-        <label id="emailLabel">password</label>
         <label id="passwordLabel">password</label>
-        <input 
+        <!-- <input 
           className="hidden"
           type="text"
           placeholder="account name" />
@@ -93,7 +88,7 @@
         <input 
           className="hidden"
           type="text"
-          placeholder="confirm password" />
+          placeholder="confirm password" /> -->
       </div>
       <div class="bottom">
         <svg 
@@ -101,7 +96,7 @@
           fill="none" 
           viewBox="0 0 24 24" 
           strokeWidth={1.5} 
-          stroke="currentColor" 
+          stroke="rgb(38, 168, 108)" 
           class="w-6 h-6 pencil-svg svg-large">
           <defs>
             <filter id="dropShadowSmall" x="0" y="0">
@@ -122,7 +117,7 @@
           fill="none" 
           viewBox="0 0 24 24" 
           strokeWidth={1.5} 
-          stroke="currentColor" 
+          stroke="#ff4e5c" 
           class="w-6 h-6 trash-svg svg-large">
             <path 
                 strokeLinecap="round" 
