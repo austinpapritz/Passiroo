@@ -1,5 +1,18 @@
 const API = window['electronAPI'];
 
+const fetchUserId = async () => {
+  try {
+    const user_id = await API.fetchUserId();
+    console.log('user_id:', user_id);
+    return user_id;
+  } catch (error) {
+    console.error('Failed to fetch user_id:', error);
+    throw error;
+  }
+};
+const fetchedUserId = fetchUserId()
+console.log('fetchedUserId', fetchedUserId);
+
 // Handle tab clicks to load respective views.
 document.getElementById('aboutPage').addEventListener('click', () => {
   API.loadAboutView();
