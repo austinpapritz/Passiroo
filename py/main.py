@@ -30,7 +30,7 @@ def register_user(email, password):
 def login_user(email, password):
     result = user_manager.login_user(email, password)
     if result:
-        return json.dumps({"status": "success", "message": "User successfully logged in"})
+        return json.dumps(result)
     else:
         return json.dumps({"status": "error", "message": "Login failed"})
   
@@ -52,10 +52,9 @@ def generate_random_password(spec_chars, pw_length):
 def fetch_user_id():
     try:
         user_id = user_manager.current_user_id
-        print(f"Fetched user_id: {user_id}")
         if user_id is None:
             return json.dumps({"status": "error", "message": "User not logged in"})
-        return json.dumps({"status": "success", "user_id": user_id.user_id})
+        return json.dumps({"status": "success", "user_id": user_id})
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
 
@@ -72,11 +71,17 @@ def fetch_passwords(user_id):
                 'account_name': account_name,
                 'password': password
             })
-        print(f"Passwords Dict: {passwords_dict}")
         return json.dumps(passwords_dict)
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
-      
+
+def logout_user():
+    try:
+        user_manager.logout_user()
+        return json.dumps({"status": "success"})
+    except Exception as e:
+        return json.dumps({"status": "error", "message": str(e)})
+
 if __name__ == '__main__':
     try:
         action = sys.argv[1]
@@ -88,6 +93,8 @@ if __name__ == '__main__':
             email = sys.argv[2]
             password = sys.argv[3]
             print(login_user(email, password))
+        elif action == 'logout_user':
+            print(logout_user())
         elif action == 'fetch_user_id':
             print(fetch_user_id())
         elif action == 'fetch_passwords':

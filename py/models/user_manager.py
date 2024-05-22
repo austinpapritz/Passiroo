@@ -1,10 +1,24 @@
-import re
+import os
+import json
 import bcrypt
+import re
+
 
 class UserManager(object):
+    _instance = None
+    SESSION_FILE = 'current_user.json'
+    
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(UserManager, cls).__new__(cls)
+        return cls._instance
+  
     def __init__(self, db_connection):
-        self.db_connection = db_connection
-        self._current_user_id = None
+        if not hasattr(self, 'initialized'):  # Ensure init is only called once
+            self.db_connection = db_connection
+            self._current_user_id = self.load_session()
+            self.initialized = True
+            # print(f"UserManager initialized with user_id: {self._current_user_id}")
         
     @property
     def current_user_id(self):
@@ -13,10 +27,23 @@ class UserManager(object):
     @current_user_id.setter
     def current_user_id(self, value):
         self._current_user_id = value
+        self.save_session()
 
     @current_user_id.deleter
     def current_user_id(self):
         del self._current_user_id
+        self.save_session()
+
+    def save_session(self):
+        with open(self.SESSION_FILE, 'w') as f:
+            json.dump({'user_id': self._current_user_id}, f)
+
+    def load_session(self):
+        if os.path.exists(self.SESSION_FILE):
+            with open(self.SESSION_FILE, 'r') as f:
+                data = json.load(f)
+                return data.get('user_id', None)
+        return None
 
     def hash_password(self, password):
         salt = bcrypt.gensalt()
@@ -36,7 +63,6 @@ class UserManager(object):
             raise ValueError("Password must contain at least one number.")
         if not re.search(r"[!@#&%^&._-]", password):
             raise ValueError("Password must contain at least one special character (!@#&%^&._-).")
-
 
     def register_user(self, email, password):
         try:
@@ -62,7 +88,7 @@ class UserManager(object):
         if bcrypt.checkpw(provided_password.encode(), stored_hashed_password):
             if (user_id):
                 self.current_user_id = user_id
-                return {"status": "success", "message": "user successfully logged in"}
+                return {"status": "success", "message": "User successfully logged in"}
             else:
                 return {"status": "error", "message": "user_id could not be found"}
         else:
