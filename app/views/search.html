@@ -66,15 +66,13 @@
         <div class="site-search-container">
           <input type="text" id="siteSearch" onkeyup="filterSearch()" placeholder="Search for website.." />
           <ul id="site-ul">
+            <!-- up to 3 il can appear here -->
           </ul>
         </div>
       </div>
       <div class="middle">
-        <select name="account_name">
+        <select id="accountNameDropdown" name="account_name">
           <option value="">choose account</option>
-          <option value="username1">email1/account name1</option>
-          <option value="username2">email2/account name2</option>
-          <option value="username3">email3/account name3</option>
         </select>
         <label id="passwordLabel">password</label>
         <!-- <input 
