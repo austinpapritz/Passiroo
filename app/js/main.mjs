@@ -124,16 +124,21 @@ ipcMain.on('login', (event, userData) => {
   const pyProcess = spawn('python', [pythonScriptPath, 'login_user', userData.email, userData.password]);
 
   pyProcess.stdout.on('data', (data) => {
-    const response = JSON.parse(data.toString());
-    if (response.status === 'success') {
-      event.reply('login-success', response.message);
-    } else {
-      event.reply('login-failure', response.message);
+    try {
+      const response = JSON.parse(data.toString());
+      if (response.status === 'success') {
+        event.reply('login-success', response.message);
+      } else {
+        event.reply('login-failure', response.message);
+      }
+    } catch (e) {
+      console.error(`Error parsing JSON: ${e.message}`);
+      event.reply('login-failure', 'Invalid response from server');
     }
   });
 
   pyProcess.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
+    console.error(`Login stderr: ${data}`);
   });
 
   pyProcess.on('close', (code) => {
@@ -141,7 +146,7 @@ ipcMain.on('login', (event, userData) => {
   });
 });
 
-ipcMain.handle('fetch-user-id', async () => {
+ipcMain.handle('fetch-user-id', async (event) => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
   const pyProcess = spawn('python', [pythonScriptPath, 'fetch_user_id']);
 
@@ -167,20 +172,17 @@ ipcMain.handle('fetch-user-id', async () => {
 
   try {
     const result = JSON.parse(data);
-    if (result.status === "success") {
-      return result.user_id;
-    } else {
-      throw new Error(result.message);
-    }
+    return result;
   } catch (e) {
     console.error(`JSON parse error: ${data}`);
     throw new Error(`JSON parse error: ${data}`);
   }
 });
 
-ipcMain.handle('fetch-passwords', async (event, userData) => {
+
+ipcMain.handle('fetch-passwords', async (event, user_id) => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
-  const pyProcess = spawn('python', [pythonScriptPath, 'fetch_passwords', userData.user_id]);
+  const pyProcess = spawn('python', [pythonScriptPath, 'fetch_passwords', user_id]);
 
   let data = '';
   let error = '';
@@ -208,4 +210,26 @@ ipcMain.handle('fetch-passwords', async (event, userData) => {
     console.error(`JSON parse error: ${data}`);
     throw new Error(`JSON parse error: ${data}`);
   }
+});
+
+ipcMain.on('logout', (event) => {
+  const pythonScriptPath = path.join(__dirname, '../../py/main.py');
+  const pyProcess = spawn('python', [pythonScriptPath, 'logout_user']);
+
+  pyProcess.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  pyProcess.on('close', (code) => {
+    if (code === 0) {
+      event.reply('logout-success');
+    } else {
+      event.reply('logout-failure');
+    }
+  });
+});
+
+app.on('before-quit', () => {
+  const pythonScriptPath = path.join(__dirname, '../../py/main.py');
+  const pyProcess = spawn('python', [pythonScriptPath, 'logout_user']);
 });

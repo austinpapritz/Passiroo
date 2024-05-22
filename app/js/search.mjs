@@ -3,7 +3,6 @@ const API = window['electronAPI'];
 const fetchUserId = async () => {
   try {
     const user_id = await API.fetchUserId();
-    console.log('user_id:', user_id);
     return user_id;
   } catch (error) {
     console.error('Failed to fetch user_id:', error);
