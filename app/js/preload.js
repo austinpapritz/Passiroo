@@ -2,9 +2,6 @@
 const {contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  resizeWindow: (width, height) => ipcRenderer.send('resize-window', { width, height }),
-  loadPlusView: () => ipcRenderer.send('loadPlusView'),
-
   sendRegister: (data) => ipcRenderer.send('register', data),
   onRegisterSuccess: (callback) => ipcRenderer.on('register-success', callback),
   onRegisterFailure: (callback) => ipcRenderer.on('register-failure', callback),
@@ -23,6 +20,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   generateRandomPassword: (data) => ipcRenderer.send('generateRandomPassword', data),
   onGenerateRandomPasswordSuccess: (callback) => ipcRenderer.on('generate-random-password-success', callback),
-  onGenerateRandomPasswordFailure: (callback) => ipcRenderer.on('generate-random-password-failure', callback)
+  onGenerateRandomPasswordFailure: (callback) => ipcRenderer.on('generate-random-password-failure', callback),
+
+  fetchUserId: () => ipcRenderer.invoke('fetch-user-id'),
+  fetchPasswords: (user_id) => ipcRenderer.invoke('fetch-passwords', user_id)
 })
 

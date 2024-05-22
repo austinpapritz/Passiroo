@@ -1,3 +1,4 @@
+import json
 from cryptography.fernet import Fernet
 
 class PasswordManager:
@@ -20,14 +21,21 @@ class PasswordManager:
         cursor.execute("SELECT encrypted_site_name, encrypted_account_name, encrypted_password FROM saved_passwords WHERE user_id=?", (user_id,))
         encrypted_entries = cursor.fetchall()
 
-        decrypted_entries = []
+        decrypted_entries = {}
         for encrypted_site_name, encrypted_account_name, encrypted_password in encrypted_entries:
             decrypted_site_name = self.decrypt(encrypted_site_name)
             decrypted_account_name = self.decrypt(encrypted_account_name)
             decrypted_password = self.decrypt(encrypted_password)
-            decrypted_entries.append((decrypted_site_name, decrypted_account_name, decrypted_password))
+            
+            if decrypted_site_name not in decrypted_entries:
+                decrypted_entries[decrypted_site_name] = []
+            
+            decrypted_entries[decrypted_site_name].append({
+                "account_name": decrypted_account_name,
+                "password": decrypted_password
+            })
 
-        return decrypted_entries
+            return json.dumps(decrypted_entries, indent=4)
       
     def get_accountName_and_password_by_site_name(self, user_id, decrypted_site_name):
         cursor = self.db_connection.cursor()

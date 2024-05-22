@@ -54,9 +54,9 @@ ipcMain.on('loadSearchView', () => {
 
 app.on('ready', createWindow);
 
-ipcMain.on('addPassword', (event, { website, email, password }) => {
+ipcMain.on('addPassword', (event, userData) => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
-  const pyProcess = spawn('python', [pythonScriptPath, 'add_password', website, email, password]);
+  const pyProcess = spawn('python', [pythonScriptPath, 'add_password', userData.website, userData.email, userData.password]);
 
   pyProcess.stderr.on('data', (data) => {
     console.error(`stderr: ${data}`);
@@ -87,15 +87,6 @@ ipcMain.on('generateRandomPassword', (event, { specChars, pwLength }) => {
       event.reply('generate-random-password-failure', result.message);
     }
   });
-});
-
-ipcMain.on('resize-window', (event, { width, height }) => {
-  if (mainWindow) { // Check if mainWindow is available
-    mainWindow.setContentSize(width, height);
-    mainWindow.center(); // Center the window after resizing
-  } else {
-    console.error("Error: mainWindow is not defined.");
-  }
 });
 
 ipcMain.on('loadPlusView', () => {
@@ -135,7 +126,7 @@ ipcMain.on('login', (event, userData) => {
   pyProcess.stdout.on('data', (data) => {
     const response = JSON.parse(data.toString());
     if (response.status === 'success') {
-      event.reply('login-success', 'User logged in successfully');
+      event.reply('login-success', response.message);
     } else {
       event.reply('login-failure', response.message);
     }
@@ -148,4 +139,73 @@ ipcMain.on('login', (event, userData) => {
   pyProcess.on('close', (code) => {
     console.log(`Python script exited with code ${code}`);
   });
+});
+
+ipcMain.handle('fetch-user-id', async () => {
+  const pythonScriptPath = path.join(__dirname, '../../py/main.py');
+  const pyProcess = spawn('python', [pythonScriptPath, 'fetch_user_id']);
+
+  let data = '';
+  let error = '';
+
+  pyProcess.stdout.on('data', (chunk) => {
+    data += chunk;
+  });
+
+  pyProcess.stderr.on('data', (chunk) => {
+    error += chunk;
+  });
+
+  const exitCode = await new Promise((resolve) => {
+    pyProcess.on('close', resolve);
+  });
+
+  if (exitCode) {
+    console.error(`subprocess error exit ${exitCode}, ${error}`);
+    throw new Error(`subprocess error exit ${exitCode}, ${error}`);
+  }
+
+  try {
+    const result = JSON.parse(data);
+    if (result.status === "success") {
+      return result.user_id;
+    } else {
+      throw new Error(result.message);
+    }
+  } catch (e) {
+    console.error(`JSON parse error: ${data}`);
+    throw new Error(`JSON parse error: ${data}`);
+  }
+});
+
+ipcMain.handle('fetch-passwords', async (event, userData) => {
+  const pythonScriptPath = path.join(__dirname, '../../py/main.py');
+  const pyProcess = spawn('python', [pythonScriptPath, 'fetch_passwords', userData.user_id]);
+
+  let data = '';
+  let error = '';
+
+  pyProcess.stdout.on('data', (chunk) => {
+    data += chunk;
+  });
+
+  pyProcess.stderr.on('data', (chunk) => {
+    error += chunk;
+  });
+
+  const exitCode = await new Promise((resolve) => {
+    pyProcess.on('close', resolve);
+  });
+
+  if (exitCode) {
+    console.error(`subprocess error exit ${exitCode}, ${error}`);
+    throw new Error(`subprocess error exit ${exitCode}, ${error}`);
+  }
+
+  try {
+    return JSON.parse(data);
+  } catch (e) {
+    console.error(`JSON parse error: ${data}`);
+    throw new Error(`JSON parse error: ${data}`);
+  }
 });

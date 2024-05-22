@@ -53,19 +53,18 @@ class UserManager(object):
 
     def login_user(self, email, provided_password):
         cursor = self.db_connection.cursor()
-        cursor.execute("SELECT hashed_password FROM users WHERE email=?", (email,))
+        cursor.execute("SELECT user_id, hashed_password FROM users WHERE email=?", (email,))
         result = cursor.fetchone()
         if result is None:
             return {"status": "error", "message": "User not found"}
 
-        stored_hashed_password = result[0]
-        if self.verify_password(stored_hashed_password, provided_password):
-            user_id = self.get_user_id_by_email(email)
-            if user_id:
+        user_id, stored_hashed_password = result
+        if bcrypt.checkpw(provided_password.encode(), stored_hashed_password):
+            if (user_id):
                 self.current_user_id = user_id
-                return {"status": "success", "message": "User logged in successfully"}
+                return {"status": "success", "message": "user successfully logged in"}
             else:
-                return {"status": "error", "message": "Failed to retrieve user ID"}
+                return {"status": "error", "message": "user_id could not be found"}
         else:
             return {"status": "error", "message": "Invalid password"}
 
@@ -78,6 +77,6 @@ class UserManager(object):
         result = cursor.fetchone()
         
         if result is None:
-            return None
+            return {"status": "error", "message": "User not found"}
 
-        return result[0]  # user_id
+        return {"status": "success", "user_id": result[0]}  # user_id

@@ -126,6 +126,8 @@ body {
 }
 
 .top h3 {
+  padding: 0;
+  margin: 0;
   font-size: 2rem;
   font-weight: 700;
 }
@@ -137,7 +139,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 3px;
 }
 
 .svg-large {
@@ -207,20 +209,17 @@ body {
   border-radius: 50px;
 }
 
+.input-group {
+  padding: 0px !important;;
+  margin: 0px !important;;
+  width: 80% !important;
+  gap: 0px !important;
+}
+
 .top input {
   color: #fff;
   width: 80%;
-  height: 3em;
-  padding: 10px;
-  border: none;
-  border-radius: 20px;
-  background: rgb(52, 51, 48, 75%);
-}
-
-.middle input {
-  color: #fff;
-  width: 80%;
-  height: 3em;
+  height: 2em;
   padding: 10px;
   border: none;
   border-radius: 20px;

@@ -29,7 +29,10 @@ def register_user(email, password):
 
 def login_user(email, password):
     result = user_manager.login_user(email, password)
-    return json.dumps(result)
+    if result:
+        return json.dumps({"status": "success", "message": "User successfully logged in"})
+    else:
+        return json.dumps({"status": "error", "message": "Login failed"})
   
 def add_password(website, email, password):
     try:
@@ -45,22 +48,50 @@ def generate_random_password(spec_chars, pw_length):
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})  
 
+
+def fetch_user_id():
+    try:
+        user_id = user_manager.current_user_id
+        print(f"Fetched user_id: {user_id}")
+        if user_id is None:
+            return json.dumps({"status": "error", "message": "User not logged in"})
+        return json.dumps({"status": "success", "user_id": user_id.user_id})
+    except Exception as e:
+        return json.dumps({"status": "error", "message": str(e)})
+
+def fetch_passwords(user_id):
+    try:
+        passwords = password_manager.get_saved_passwords_by_user_id(user_id)
+        if not passwords:
+            passwords = []
+        passwords_dict = {}
+        for site, account_name, password in passwords:
+            if site not in passwords_dict:
+                passwords_dict[site] = []
+            passwords_dict[site].append({
+                'account_name': account_name,
+                'password': password
+            })
+        print(f"Passwords Dict: {passwords_dict}")
+        return json.dumps(passwords_dict)
+    except Exception as e:
+        return json.dumps({"status": "error", "message": str(e)})
+      
 if __name__ == '__main__':
-    action = sys.argv[1]
-    if action == 'register_user':
-        email = sys.argv[2]
-        password = sys.argv[3]
-        print(register_user(email, password))
-    elif action == 'login_user':
-        email = sys.argv[2]
-        password = sys.argv[3]
-        print(login_user(email, password))
-    elif action == 'add_password':
-        website = sys.argv[2]
-        email = sys.argv[3]
-        password = sys.argv[4]
-        print(add_password(website, email, password))
-    elif action == 'generate_random_password':
-        spec_chars = sys.argv[2]
-        pw_length = sys.argv[3]
-        print(generate_random_password(spec_chars, pw_length))
+    try:
+        action = sys.argv[1]
+        if action == 'register_user':
+            email = sys.argv[2]
+            password = sys.argv[3]
+            print(register_user(email, password))
+        elif action == 'login_user':
+            email = sys.argv[2]
+            password = sys.argv[3]
+            print(login_user(email, password))
+        elif action == 'fetch_user_id':
+            print(fetch_user_id())
+        elif action == 'fetch_passwords':
+            user_id = sys.argv[2]
+            print(fetch_passwords(user_id))
+    except Exception as e:
+        print(json.dumps({"status": "error", "message": str(e)}))
