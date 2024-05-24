@@ -56,10 +56,17 @@ app.on('ready', createWindow);
 
 ipcMain.on('addPassword', (event, userData) => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
-  const pyProcess = spawn('python', [pythonScriptPath, 'add_password', userData.website, userData.email, userData.password]);
+  const pyProcess = spawn('python', [pythonScriptPath, 'add_password', userData.user_id, userData.site_name, userData.account_name, userData.password]);
 
-  pyProcess.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
+  let data = '';
+  let error = '';
+
+  pyProcess.stdout.on('data', (chunk) => {
+    data += chunk;
+  });
+
+  pyProcess.stderr.on('data', (chunk) => {
+    error += chunk;
   });
 
   pyProcess.on('close', (code) => {
@@ -188,29 +195,31 @@ ipcMain.handle('fetch-passwords', async (event, user_id) => {
   let error = '';
 
   pyProcess.stdout.on('data', (chunk) => {
-    data += chunk;
+      data += chunk;
   });
 
   pyProcess.stderr.on('data', (chunk) => {
-    error += chunk;
+      error += chunk;
   });
 
   const exitCode = await new Promise((resolve) => {
-    pyProcess.on('close', resolve);
+      pyProcess.on('close', resolve);
   });
 
   if (exitCode) {
-    console.error(`subprocess error exit ${exitCode}, ${error}`);
-    throw new Error(`subprocess error exit ${exitCode}, ${error}`);
+      console.error(`subprocess error exit ${exitCode}, ${error}`);
+      throw new Error(`subprocess error exit ${exitCode}, ${error}`);
   }
 
   try {
-    return JSON.parse(data);
+      const result = JSON.parse(data);
+      return result;
   } catch (e) {
-    console.error(`JSON parse error: ${data}`);
-    throw new Error(`JSON parse error: ${data}`);
+      console.error(`JSON parse error: ${data}`);
+      throw new Error(`JSON parse error: ${data}`);
   }
 });
+
 
 ipcMain.on('logout', (event) => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');

@@ -2,8 +2,8 @@ const API = window['electronAPI'];
 
 const fetchUserId = async () => {
   try {
-    const user_id = await API.fetchUserId();
-    return user_id;
+    const response = await API.fetchUserId();
+    return response.user_id;
   } catch (error) {
     console.error('Failed to fetch user_id:', error);
     throw error;
@@ -26,9 +26,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (API) {
     try {
       const user_id = await fetchUserId();
+      console.log('user_id on load', user_id)
       if (user_id) {
-        const passwordObjs = await API.fetchPasswords({ user_id });
-        populateSiteList(passwordObjs);
+        let response = await API.fetchPasswords(user_id);
+
+        if (typeof response.data === 'string') {
+          response = JSON.parse(response.data);
+        }
+
+        if (response) {
+          populateSiteList(response);
+        } else {
+          console.error('Failed to fetch passwords:', response.message);
+        }
       }
     } catch (error) {
       console.error('Failed to fetch passwords:', error);
@@ -42,7 +52,6 @@ function populateSiteList(passwordObjs) {
   const siteUL = document.getElementById('site-ul');
   siteUL.innerHTML = ''; // Clear existing items
   for (const site in passwordObjs) {
-    console.log('site', site);
     const li = document.createElement('li');
     li.textContent = site;
     li.classList.add('site-li');
