@@ -1,5 +1,15 @@
 const API = window['electronAPI'];
 
+const fetchUserId = async () => {
+  try {
+    const response = await API.fetchUserId();
+    return response.user_id;
+  } catch (error) {
+    console.error('Failed to fetch user_id:', error);
+    throw error;
+  }
+};
+
 // Handle tab clicks to load respective views.
 document.getElementById('aboutPage').addEventListener('click', () => {
   API.loadAboutView();
@@ -18,11 +28,11 @@ document.querySelectorAll('.spec-char-li').forEach(li => {
 });
 
 // Handle form submission for adding a password.
-document.getElementById('addPasswordForm').addEventListener('submit', (event) => {
+document.getElementById('addPasswordForm').addEventListener('submit', async (event) => {
   event.preventDefault(); // Prevent the default form submission
 
-  const website = document.getElementById('websiteInput').value;
-  const email = document.getElementById('emailInput').value;
+  const site_name = document.getElementById('websiteInput').value;
+  const account_name = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
   const confirmPassword = document.getElementById('confirmPasswordInput').value;
 
@@ -34,7 +44,12 @@ document.getElementById('addPasswordForm').addEventListener('submit', (event) =>
 
   // Send data to backend to add the password
   if (API) {
-    API.addPassword({ website, email, password });
+    try {
+      const user_id = await fetchUserId();
+      await API.addPassword({user_id, site_name, account_name, password});
+    } catch (error) {
+      console.error('Failed to add password:', error);
+    }
   } else {
     console.error('electronAPI is not available');
   }

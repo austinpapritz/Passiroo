@@ -12,6 +12,7 @@ passiroo.db
 .db
 
 # Environment files
+current_user.json
 .env
 
 # Operating System files
@@ -31,3 +32,4 @@ npm-debug.log*
 
 # Other
 dist/
+secret.key
