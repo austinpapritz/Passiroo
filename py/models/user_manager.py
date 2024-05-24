@@ -96,13 +96,3 @@ class UserManager(object):
 
     def logout_user(self):
         del self.current_user_id
-
-    def get_user_id_by_email(self, email):
-        cursor = self.db_connection.cursor()
-        cursor.execute("SELECT user_id FROM users WHERE email = ?", (email,))
-        result = cursor.fetchone()
-        
-        if result is None:
-            return {"status": "error", "message": "User not found"}
-
-        return {"status": "success", "user_id": result[0]}  # user_id
