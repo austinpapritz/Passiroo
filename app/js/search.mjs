@@ -59,6 +59,8 @@ function populateSiteList(passwordObjs) {
     li.textContent = site;
     li.classList.add('site-li');
     li.addEventListener('click', () => {
+      const allSites = document.querySelectorAll('.site-li');
+      allSites.forEach(site => site.classList.remove('selected'));
       li.classList.add('selected');
       accountNameDropdown.innerHTML = '';
       passwordLabel.innerHTML = ''; 
@@ -70,7 +72,6 @@ function populateSiteList(passwordObjs) {
 
 function populateAccountDropdown(accounts) {
   const accountNameDropdown = document.getElementById('accountNameDropdown');
-  accountNameDropdown.innerHTML = '<option value="">account name</option>';
 
   accounts.forEach(account => {
     const option = document.createElement('option');
@@ -83,7 +84,7 @@ function populateAccountDropdown(accounts) {
   });
 
   if (accounts.length > 0) {
-    accountNameDropdown.selectedIndex = 1;
+    accountNameDropdown.selectedIndex = 0;
     populatePasswordLabel(accounts[0].password);
   }
 
