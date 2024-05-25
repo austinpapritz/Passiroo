@@ -54,6 +54,7 @@ function populateSiteList(passwordObjs) {
   const accountNameDropdown = document.getElementById('accountNameDropdown');
   siteUL.innerHTML = '';
 
+  let count = 0;
   for (const site in passwordObjs) {
     const li = document.createElement('li');
     li.textContent = site;
@@ -64,6 +65,11 @@ function populateSiteList(passwordObjs) {
       populateAccountDropdown(passwordObjs[site]);
     });
     siteUL.appendChild(li);
+
+    count++;
+    if (count === 3) {
+      return;
+    }
   }
 }
 
