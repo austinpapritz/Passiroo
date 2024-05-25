@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (response) {
           populateSiteList(response);
+          window.passwordObjs = response;
         } else {
           console.error('Failed to fetch passwords:', response.message);
         }
@@ -64,9 +65,37 @@ function populateAccountDropdown(accounts) {
   accountNameDropdown.innerHTML = '<option value="">choose account</option>';
 
   accounts.forEach(account => {
+    console.log('account', account);
     const option = document.createElement('option');
-    option.value = account.account_name;
+    option.value = account.password;
     option.textContent = account.account_name;
+    option.addEventListener('click', () => populatePasswordLabel(account.password));
     accountNameDropdown.appendChild(option);
   });
+
+  accountNameDropdown.addEventListener('change', (event) => {
+    const selectedPassword = event.target.value;
+    populatePasswordLabel(selectedPassword);
+  });
+}
+
+function populatePasswordLabel(password) {
+  const passwordLabel = document.getElementById('passwordLabel');
+  passwordLabel.textContent = password;
+}
+
+function filterSearch() {
+  const input = document.getElementById('siteSearch');
+  const filter = input.value.toLowerCase();
+  const ul = document.getElementById('site-ul');
+  const li = ul.getElementsByTagName('li');
+
+  for (let i = 0; i < li.length; i++) {
+    const a = li[i].textContent || li[i].innerText;
+    if (a.toLowerCase().indexOf(filter) > -1) {
+      li[i].style.display = "";
+    } else {
+      li[i].style.display = "none";
+    }
+  }
 }
