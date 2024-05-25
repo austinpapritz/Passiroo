@@ -73,6 +73,11 @@ function populateAccountDropdown(accounts) {
     accountNameDropdown.appendChild(option);
   });
 
+  if (accounts.length === 1) {
+    accountNameDropdown.selectedIndex = 1; 
+    populatePasswordLabel(accounts[0].password);
+  }
+
   accountNameDropdown.addEventListener('change', (event) => {
     const selectedPassword = event.target.value;
     populatePasswordLabel(selectedPassword);
