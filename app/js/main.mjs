@@ -19,9 +19,9 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
       enableRemoteModule: false,
-    },
+    }
     // Uncomment if you want to hide the title bar:
-    titleBarStyle: 'hidden'
+    // titleBarStyle: 'hidden'
   });
   mainWindow.loadFile('app/views/login-register.html');
   // Uncomment to open the DevTools:

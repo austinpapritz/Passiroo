@@ -50,12 +50,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function populateSiteList(passwordObjs) {
   const siteUL = document.getElementById('site-ul');
-  siteUL.innerHTML = ''; // Clear existing items
+  const passwordLabel = document.getElementById('passwordLabel');
+  const accountNameDropdown = document.getElementById('accountNameDropdown');
+  siteUL.innerHTML = '';
+
   for (const site in passwordObjs) {
     const li = document.createElement('li');
     li.textContent = site;
     li.classList.add('site-li');
-    li.addEventListener('click', () => populateAccountDropdown(passwordObjs[site]));
+    li.addEventListener('click', () => {
+      accountNameDropdown.innerHTML = '';
+      passwordLabel.innerHTML = ''; 
+      populateAccountDropdown(passwordObjs[site]);
+    });
     siteUL.appendChild(li);
   }
 }
