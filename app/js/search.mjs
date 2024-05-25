@@ -59,6 +59,7 @@ function populateSiteList(passwordObjs) {
     li.textContent = site;
     li.classList.add('site-li');
     li.addEventListener('click', () => {
+      li.classList.add('selected');
       accountNameDropdown.innerHTML = '';
       passwordLabel.innerHTML = ''; 
       populateAccountDropdown(passwordObjs[site]);
@@ -69,19 +70,20 @@ function populateSiteList(passwordObjs) {
 
 function populateAccountDropdown(accounts) {
   const accountNameDropdown = document.getElementById('accountNameDropdown');
-  accountNameDropdown.innerHTML = '<option value="">choose account</option>';
+  accountNameDropdown.innerHTML = '<option value="">account name</option>';
 
   accounts.forEach(account => {
-    console.log('account', account);
     const option = document.createElement('option');
     option.value = account.password;
     option.textContent = account.account_name;
-    option.addEventListener('click', () => populatePasswordLabel(account.password));
+    option.addEventListener('click', () => {
+      populatePasswordLabel(account.password);
+    });
     accountNameDropdown.appendChild(option);
   });
 
-  if (accounts.length === 1) {
-    accountNameDropdown.selectedIndex = 1; 
+  if (accounts.length > 0) {
+    accountNameDropdown.selectedIndex = 1;
     populatePasswordLabel(accounts[0].password);
   }
 
@@ -105,9 +107,9 @@ function filterSearch() {
   for (let i = 0; i < li.length; i++) {
     const a = li[i].textContent || li[i].innerText;
     if (a.toLowerCase().indexOf(filter) > -1) {
-      li[i].style.display = "";
+      li[i].style.display = '';
     } else {
-      li[i].style.display = "none";
+      li[i].style.display = 'none';
     }
   }
 }
