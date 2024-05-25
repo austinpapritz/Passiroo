@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (API) {
     try {
       const user_id = await fetchUserId();
-      console.log('user_id on load', user_id)
       if (user_id) {
         let response = await API.fetchPasswords(user_id);
 
