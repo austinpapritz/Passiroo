@@ -188,6 +188,17 @@ body {
   z-index: 30;
 }
 
+.site-ul-container {
+  width: 100%;
+  max-height: 6em; /* Adjust as needed for your design */
+  overflow-y: auto;
+}
+
+.site-ul-container::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
 .top ul {
 	display: flex;
 	flex-direction: column;
