@@ -23,7 +23,7 @@ body {
 	position: relative;
 	width: 100%;
 	min-height: 100%;
-	background: #121112;
+	background: transparent !important;
 	font-size: 1.2rem;
 }
 

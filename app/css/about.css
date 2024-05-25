@@ -16,13 +16,14 @@
 	font-optical-sizing: auto;
 	font-weight: 400;
 	font-style: normal;
+  color: #fff;
 }
 
 body {
 	position: relative;
 	width: 100%;
 	min-height: 100%;
-	background: #121112;
+	background: transparent !important; 
 	color: #fff;
 	font-size: 1.2rem;
 }
@@ -60,7 +61,7 @@ body {
 	justify-content: center;
 	align-items: center;
 	border-radius: 0 40px 40px 0;
-	box-shadow: 6px 0px 15px 3px rgba(0, 0, 0, 0.3);
+	box-shadow: 6px 0px 15px 3px rgba(0, 0, 0, .30);
 	z-index: 40;
 }
 
