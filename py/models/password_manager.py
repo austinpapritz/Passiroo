@@ -54,8 +54,10 @@ class PasswordManager:
             except Exception as e:
                 logging.error(f"Error decrypting entry: {str(e)}")  # Log decryption error
 
-        logging.debug(f"Decrypted Entries: {decrypted_entries}")  # Log final decrypted entries
-        return json.dumps(decrypted_entries, indent=4)
+        sorted_decrypted_entries = {k: decrypted_entries[k] for k in sorted(decrypted_entries.keys())}
+        
+        logging.debug(f"Decrypted Entries: {sorted_decrypted_entries}")  # Log final decrypted entries
+        return json.dumps(sorted_decrypted_entries, indent=4)
 
       
     def get_accountName_and_password_by_site_name(self, user_id, decrypted_site_name):
