@@ -240,5 +240,5 @@ ipcMain.on('logout', (event) => {
 
 app.on('before-quit', () => {
   const pythonScriptPath = path.join(__dirname, '../../py/main.py');
-  const pyProcess = spawn('python', [pythonScriptPath, 'logout_user']);
+  spawn('python', [pythonScriptPath, 'logout_user']);
 });
