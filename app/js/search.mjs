@@ -22,6 +22,8 @@ plusPage.addEventListener('click', () => {
   API.loadPlusView();
 });
 
+
+// Populating site name search / dropdown list.
 document.addEventListener('DOMContentLoaded', async () => {
   if (API) {
     try {
@@ -114,3 +116,57 @@ function filterSearch() {
     }
   }
 }
+
+// Edit password
+document.addEventListener("DOMContentLoaded", () => {
+  const pencilSvg = document.getElementById("pencilSvg");
+  const checkmarkSvg = document.querySelector(".pencil-svg.hidden");
+  const trashSvg = document.getElementById("trashSvg");
+  const xmarkSvg = document.querySelector(".trash-svg.hidden");
+  const accountNameInput = document.querySelector(".middle input[placeholder='account name']");
+  const passwordInput = document.querySelector(".middle input[placeholder='password']");
+  const confirmPasswordInput = document.querySelector(".middle input[placeholder='confirm password']");
+  const passwordLabel = document.getElementById("passwordLabel");
+
+  pencilSvg.addEventListener("click", () => {
+      // Toggle hidden class on input fields and labels
+      toggleHidden([accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
+      // Toggle visibility of SVGs
+      toggleHidden([pencilSvg, checkmarkSvg, trashSvg, xmarkSvg]);
+  });
+
+  checkmarkSvg.addEventListener("click", () => {
+      // Handle the logic for confirming the edit
+      confirmEdit();
+      // Toggle back the hidden class on input fields and labels
+      toggleHidden([accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
+      // Toggle back visibility of SVGs
+      toggleHidden([pencilSvg, checkmarkSvg, trashSvg, xmarkSvg]);
+  });
+
+  xmarkSvg.addEventListener("click", () => {
+      // Handle the logic for cancelling the edit
+      cancelEdit();
+      // Toggle back the hidden class on input fields and labels
+      toggleHidden([accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
+      // Toggle back visibility of SVGs
+      toggleHidden([pencilSvg, checkmarkSvg, trashSvg, xmarkSvg]);
+  });
+
+  function toggleHidden(elements) {
+      elements.forEach(element => {
+          element.classList.toggle("hidden");
+      });
+  }
+
+  function confirmEdit() {
+      // Logic to save the edited values
+      // This can include sending the updated values to the backend
+      console.log("Edit confirmed");
+  }
+
+  function cancelEdit() {
+      // Logic to revert any changes made during the edit
+      console.log("Edit cancelled");
+  }
+});
