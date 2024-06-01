@@ -29,16 +29,16 @@ class PasswordManager:
     def get_saved_passwords_by_user_id(self, user_id):
         logging.debug(f"user_id backend: {user_id}")  # Log to file
         cursor = self.db_connection.cursor()
-        cursor.execute("SELECT encrypted_site_name, encrypted_account_name, encrypted_password FROM saved_passwords WHERE user_id=?", (user_id,))
+        cursor.execute("SELECT encrypted_site_name, encrypted_account_name, encrypted_password, password_id FROM saved_passwords WHERE user_id=?", (user_id,))
         encrypted_entries = cursor.fetchall()
-        logging.debug(f"Encrypted Entries: {encrypted_entries}")  # Log to file
+        # logging.debug(f"Encrypted Entries: {encrypted_entries}")  # Log to file
 
         decrypted_entries = {}
         for entry in encrypted_entries:
-            if len(entry) != 3:
+            if len(entry) != 4:
                 logging.error(f"Entry has unexpected format: {entry}")
                 continue
-            encrypted_site_name, encrypted_account_name, encrypted_password = entry
+            encrypted_site_name, encrypted_account_name, encrypted_password, password_id = entry
             try:
                 decrypted_site_name = self.decrypt(encrypted_site_name)
                 decrypted_account_name = self.decrypt(encrypted_account_name)
@@ -49,14 +49,15 @@ class PasswordManager:
 
                 decrypted_entries[decrypted_site_name].append({
                     "account_name": decrypted_account_name,
-                    "password": decrypted_password
+                    "password": decrypted_password,
+                    "password_id": password_id
                 })
             except Exception as e:
                 logging.error(f"Error decrypting entry: {str(e)}")  # Log decryption error
 
         sorted_decrypted_entries = {k: decrypted_entries[k] for k in sorted(decrypted_entries.keys())}
         
-        logging.debug(f"Decrypted Entries: {sorted_decrypted_entries}")  # Log final decrypted entries
+        # logging.debug(f"Decrypted Entries: {sorted_decrypted_entries}")  # Log final decrypted entries
         return json.dumps(sorted_decrypted_entries, indent=4)
 
       
