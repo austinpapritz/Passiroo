@@ -52,7 +52,7 @@ def login_user(email, password):
   
 def add_password(user_id, site_name, account_name, password):
     try:
-        logging.debug(f"Password added for site_name: {site_name}, account_name: {account_name}, user_id: {user_id}, password: {password}")
+        # logging.debug(f"Password added for site_name: {site_name}, account_name: {account_name}, user_id: {user_id}, password: {password}")
         password_manager.add_saved_password(user_id, site_name, account_name, password)
         return json.dumps({"status": "success", "message": "Password successfully added"})
     except Exception as e:
@@ -60,7 +60,7 @@ def add_password(user_id, site_name, account_name, password):
       
 def edit_password(password_id, site_name, account_name, password):
     try:
-        logging.debug(f"Password (id {password_id}), added for site_name: {site_name}, account_name: {account_name}, password: {password}")
+        # logging.debug(f"Password (id {password_id}), added for site_name: {site_name}, account_name: {account_name}, password: {password}")
         password_manager.edit_saved_password(password_id, site_name, account_name, password)
         return json.dumps({"status": "success", "message": "Password successfully edited"})
     except Exception as e:

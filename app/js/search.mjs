@@ -12,6 +12,7 @@ const fetchUserId = async () => {
 
 const aboutPage = document.getElementById("aboutPage");
 const plusPage = document.getElementById("plusPage");
+const searchPage = document.getElementById("searchPage");
 
 // Handle tab clicks to load respective views.
 aboutPage.addEventListener("click", () => {
@@ -22,9 +23,11 @@ plusPage.addEventListener("click", () => {
   API.loadPlusView();
 });
 
+searchPage.addEventListener("click", () => {
+  API.loadSearchView();
+});
 
-// Populating site name search / dropdown list.
-document.addEventListener("DOMContentLoaded", async () => {
+async function fetchPasswordData() {
   if (API) {
     try {
       const user_id = await fetchUserId();
@@ -48,6 +51,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   } else {
     console.error("electronAPI is not available");
   }
+}
+// Populating site name search / dropdown list.
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchPasswordData();
 });
 
 function populateSiteList(passwordObjs) {
@@ -138,6 +145,9 @@ document.addEventListener("DOMContentLoaded", () => {
   checkmarkSvg.addEventListener("click", async () => {
       // Handle the logic for confirming the edit.
       await confirmEdit();
+      // Refetch passwords and reload page.
+      await fetchPasswordData();
+      API.loadSearchView();
       // Toggle back the hidden class on input fields and labels.
       toggleHidden([accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
       // Toggle back visibility of SVGs.
@@ -168,12 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const newPassword = passwordInput.value;
       const confirmPassword = confirmPasswordInput.value;
 
-      // Debugging: log the values to check if they are correct
-      console.log('Selected Site:', selectedSite);
-      console.log('New Account Name:', newAccountName);
-      console.log('New Password:', newPassword);
-      console.log('Confirm Password:', confirmPassword);
-
       if (newPassword !== confirmPassword) {
         alert("Passwords do not match!");
         return;
@@ -195,8 +199,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function cancelEdit() {
-      // Logic to revert any changes made during the edit.
-      console.log("Edit cancelled");
+  async function cancelEdit() {
+    await fetchPasswordData();
+    API.loadSearchView();
   }
 });
