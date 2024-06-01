@@ -31,7 +31,7 @@ class PasswordManager:
         cursor = self.db_connection.cursor()
         cursor.execute("SELECT encrypted_site_name, encrypted_account_name, encrypted_password, password_id FROM saved_passwords WHERE user_id=?", (user_id,))
         encrypted_entries = cursor.fetchall()
-        logging.debug(f"Encrypted Entries: {encrypted_entries}")  # Log to file
+        # logging.debug(f"Encrypted Entries: {encrypted_entries}")  # Log to file
 
         decrypted_entries = {}
         for entry in encrypted_entries:
@@ -57,7 +57,7 @@ class PasswordManager:
 
         sorted_decrypted_entries = {k: decrypted_entries[k] for k in sorted(decrypted_entries.keys())}
         
-        logging.debug(f"Decrypted Entries: {sorted_decrypted_entries}")  # Log final decrypted entries
+        # logging.debug(f"Decrypted Entries: {sorted_decrypted_entries}")  # Log final decrypted entries
         return json.dumps(sorted_decrypted_entries, indent=4)
 
       
