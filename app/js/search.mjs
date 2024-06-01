@@ -27,6 +27,22 @@ searchPage.addEventListener("click", () => {
   API.loadSearchView();
 });
 
+// Fetches password object from backend. Example below:
+// {
+//   "site_name": [
+//     {
+//       "account_name": "a@b.com",
+//       "password": "p4ssw0rd",
+//       "password_id": 1
+//     },
+//     {
+//       "account_name": "b@c.com",
+//       "password": "hunter_2",
+//       "password_id": 2
+//     },
+//   ]
+// }
+
 async function fetchPasswordData() {
   if (API) {
     try {
@@ -135,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmPasswordInput = document.querySelector(".middle input[placeholder='confirm password']");
   const passwordLabel = document.getElementById("passwordLabel");
 
+  // Pencil and trashcan SVGs turn in to checkmark and ex-mark SVGs for confirming/cancelling edit.
   pencilSvg.addEventListener("click", () => {
       // Toggle hidden class on input fields and labels.
       toggleHidden([accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
@@ -169,6 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
+  // If checkmark is clicked, then send new password data to backend for updating.
   async function confirmEdit() {
     try {
       const selectedSite = document.querySelector(".site-li.selected").textContent;
@@ -199,6 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // If ex-mark is clicked, cancel the edit by reloading page.
   async function cancelEdit() {
     await fetchPasswordData();
     API.loadSearchView();
