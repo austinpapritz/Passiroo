@@ -11,13 +11,12 @@ Passiroo is a lightweight desktop password manager — backend rigorously built 
 
 To-dos:
 Delete passwords
-  Toggle SVGs
   Give labels red borders
-  Send del to backend
 Double check login/register work
+Fix tests
+Forms disable after adding password?
 Slide animation on main content
 Click-through on transparent bg?
-Forms disable after adding password?
 close/minimize/drag from passiroo
 logging out
 session timed log out?
