@@ -70,6 +70,7 @@ async function fetchPasswordData() {
 // Populating site name search / dropdown list.
 document.addEventListener("DOMContentLoaded", async () => {
   await fetchPasswordData();
+  document.getElementById("siteSearch").focus();
 });
 
 function populateSiteList(passwordObjs) {
