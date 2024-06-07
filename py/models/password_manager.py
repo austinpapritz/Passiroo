@@ -9,7 +9,6 @@ class PasswordManager:
     def __init__(self, db_connection, encryption_key):
         self.db_connection = db_connection
         self.fernet = Fernet(encryption_key)
-        logging.debug(f"Fernet initialized: {self.fernet}")
 
     def add_saved_password(self, user_id, site_name, account_name, password):
         try:
@@ -27,7 +26,6 @@ class PasswordManager:
             return {"status": "error", "message": str(e)}
 
     def get_saved_passwords_by_user_id(self, user_id):
-        logging.debug(f"user_id backend: {user_id}")  # Log to file
         cursor = self.db_connection.cursor()
         cursor.execute("SELECT encrypted_site_name, encrypted_account_name, encrypted_password, password_id FROM saved_passwords WHERE user_id=?", (user_id,))
         encrypted_entries = cursor.fetchall()
@@ -97,7 +95,7 @@ class PasswordManager:
             )
 
     def delete_saved_password(self, password_id):
-      logging.debug(f"del password_id: {password_id}")  # Log final decrypted entries
+      # logging.debug(f"del password_id: {password_id}")  # Log final decrypted entries
       with self.db_connection:
           self.db_connection.execute(
               "DELETE FROM saved_passwords WHERE password_id = ?",
