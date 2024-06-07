@@ -19,16 +19,18 @@ document.getElementById("searchPage").addEventListener("click", () => {
   API.loadSearchView();
 });
 
-// Highlight selected special characters.
-document.querySelectorAll(".spec-char-li").forEach(li => {
-  li.addEventListener("click", () => {
-    li.classList.toggle("selected");
-  });
+plusPage.addEventListener("click", () => {
+  API.loadPlusView();
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("websiteInput").focus();
+});
+
+
 // Handle form submission for adding a password.
-document.getElementById("addPasswordForm").addEventListener("submit", async (event) => {
-  event.preventDefault(); // Prevent the default form submission.
+document.getElementById("addNewPasswordToDatabaseForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
 
   const site_name = document.getElementById("websiteInput").value;
   const account_name = document.getElementById("emailInput").value;
@@ -37,7 +39,7 @@ document.getElementById("addPasswordForm").addEventListener("submit", async (eve
 
   // Check if password matches confirm password.
   if (password !== confirmPassword) {
-    alert("Passwords do not match!");
+    showCustomAlert("Passwords do not match!");
     return;
   }
 
@@ -46,6 +48,13 @@ document.getElementById("addPasswordForm").addEventListener("submit", async (eve
     try {
       const user_id = await fetchUserId();
       await API.addPassword({user_id, site_name, account_name, password});
+      
+      // Manually reset each form field
+      document.getElementById("websiteInput").value = '';
+      document.getElementById("emailInput").value = '';
+      document.getElementById("passwordInput").value = '';
+      document.getElementById("confirmPasswordInput").value = '';
+      
     } catch (error) {
       console.error("Failed to add password:", error);
     }
@@ -70,6 +79,34 @@ pwLengthInput.addEventListener("input", (event) => {
   }
 });
 
+// Custom alert function.
+function showCustomAlert(message) {
+  const modal = document.getElementById("customAlertModal");
+  const messageElement = document.getElementById("customAlertMessage");
+  const closeButton = document.getElementById("closeModalButton");
+
+  messageElement.textContent = message;
+  modal.style.display = "block";
+
+  closeButton.onclick = function() {
+    modal.style.display = "none";
+  };
+
+  // Close the modal when clicking outside of the modal content.
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+}
+
+// Highlight selected special characters for generating password.
+document.querySelectorAll(".spec-char-li").forEach(li => {
+  li.addEventListener("click", () => {
+    li.classList.toggle("selected");
+  });
+});
+
 // Handle generate random password.
 document.getElementById("generatePasswordButton").addEventListener("click", () => {
   const specChars = Array.from(document.querySelectorAll(".spec-char-li"))
@@ -90,12 +127,11 @@ document.getElementById("generatePasswordButton").addEventListener("click", () =
 // Listen for the backend responses.
 if (API) {
   API.onAddPasswordSuccess((event, message) => {
-    alert("Password added successfully!");
-    document.getElementById("addPasswordForm").reset();
+    showCustomAlert("Password added successfully!");
   });
 
   API.onAddPasswordFailure((event, message) => {
-    alert(`Failed to add password: ${message}`);
+    showCustomAlert(`Failed to add password: ${message}`);
   });
 
   API.onGenerateRandomPasswordSuccess((event, { password }) => {
@@ -104,7 +140,7 @@ if (API) {
   });
 
   API.onGenerateRandomPasswordFailure((event, message) => {
-    alert(`Failed to generate password: ${message}`);
+    showCustomAlert(`Failed to generate password: ${message}`);
   });
 } else {
   console.error("Electron APIs are not available.");
