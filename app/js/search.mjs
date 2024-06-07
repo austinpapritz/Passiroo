@@ -12,6 +12,7 @@ const fetchUserId = async () => {
 
 const aboutPage = document.getElementById("aboutPage");
 const plusPage = document.getElementById("plusPage");
+const searchPage = document.getElementById("searchPage");
 
 // Handle tab clicks to load respective views.
 aboutPage.addEventListener("click", () => {
@@ -22,9 +23,26 @@ plusPage.addEventListener("click", () => {
   API.loadPlusView();
 });
 
+searchPage.addEventListener("click", () => {
+  API.loadSearchView();
+});
 
-// Populating site name search / dropdown list.
-document.addEventListener("DOMContentLoaded", async () => {
+// Fetches password object from backend. Example of passwordObj below:
+// {
+//   "site_name": [
+//     {
+//       "account_name": "a@b.com",
+//       "password": "p4ssw0rd",
+//       "password_id": 1
+//     },
+//     {
+//       "account_name": "b@c.com",
+//       "password": "hunter_2",
+//       "password_id": 2
+//     },
+//   ]
+// }
+async function fetchPasswordData() {
   if (API) {
     try {
       const user_id = await fetchUserId();
@@ -48,6 +66,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   } else {
     console.error("electronAPI is not available");
   }
+}
+// Populating site name search / dropdown list.
+document.addEventListener("DOMContentLoaded", async () => {
+  await fetchPasswordData();
 });
 
 function populateSiteList(passwordObjs) {
@@ -117,48 +139,63 @@ function filterSearch() {
   }
 }
 
-// Edit password
+// Edit and delete password.
 document.addEventListener("DOMContentLoaded", () => {
   const pencilSvg = document.getElementById("pencilSvg");
   const checkmarkSvg = document.querySelector(".pencil-svg.hidden");
   const trashSvg = document.getElementById("trashSvg");
   const xmarkSvg = document.querySelector(".trash-svg.hidden");
+  const accountNameDropdown = document.getElementById("accountNameDropdown");
+  const passwordLabel = document.getElementById("passwordLabel");
   const accountNameInput = document.querySelector(".middle input[placeholder='account name']");
   const passwordInput = document.querySelector(".middle input[placeholder='password']");
   const confirmPasswordInput = document.querySelector(".middle input[placeholder='confirm password']");
-  const passwordLabel = document.getElementById("passwordLabel");
 
+  let confirmingDelete = false;
+
+  // Pencil and trashcan SVGs turn into checkmark and ex-mark SVGs for confirming/cancelling edit.
   pencilSvg.addEventListener("click", () => {
-      // Toggle hidden class on input fields and labels.
-      toggleHidden([accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
-      // Toggle visibility of SVGs.
-      toggleHidden([pencilSvg, checkmarkSvg, trashSvg, xmarkSvg]);
+    // Toggle hidden class on input fields and labels.
+    addHidden([pencilSvg, trashSvg]);
+    // Toggle visibility of SVGs.
+    removeHidden([checkmarkSvg, xmarkSvg, accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
   });
 
+  trashSvg.addEventListener("click", () => {
+
+    confirmingDelete = true;
+    addRedBorder([accountNameDropdown, passwordLabel]);
+    addHidden([pencilSvg, trashSvg]);
+    removeHidden([checkmarkSvg, xmarkSvg]);
+});
+
   checkmarkSvg.addEventListener("click", async () => {
-      // Handle the logic for confirming the edit.
+    if (confirmingDelete) {
+      await deletePassword();
+      confirmingDelete = false;
+      removeRedBorder([accountNameDropdown, passwordLabel]);
+    } else {
       await confirmEdit();
-      // Toggle back the hidden class on input fields and labels.
-      toggleHidden([accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
-      // Toggle back visibility of SVGs.
-      toggleHidden([pencilSvg, checkmarkSvg, trashSvg, xmarkSvg]);
+    }
+    // Refetch passwords and reload page.
+    await fetchPasswordData();
+    // API.loadSearchView();
+    // Toggle back the hidden class on input fields and labels.
+    addHidden([accountNameInput, passwordInput, confirmPasswordInput, checkmarkSvg, xmarkSvg]);
+    // Toggle back visibility of SVGs.
+    removeHidden([pencilSvg, trashSvg, accountNameDropdown, passwordLabel ]);
   });
 
   xmarkSvg.addEventListener("click", () => {
-      // Handle the logic for cancelling the edit.
-      cancelEdit();
-      // Toggle back the hidden class on input fields and labels.
-      toggleHidden([accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
-      // Toggle back visibility of SVGs.
-      toggleHidden([pencilSvg, checkmarkSvg, trashSvg, xmarkSvg]);
+    // Handle the logic for cancelling the edit.
+    cancelEdit();
+    // Toggle back the hidden class on input fields and labels.
+    toggleHidden([accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
+    // Toggle back visibility of SVGs.
+    toggleHidden([pencilSvg, checkmarkSvg, trashSvg, xmarkSvg]);
   });
 
-  function toggleHidden(elements) {
-      elements.forEach(element => {
-          element.classList.toggle("hidden");
-      });
-  }
-
+  // If checkmark is clicked, then send new password data to backend for updating.
   async function confirmEdit() {
     try {
       const selectedSite = document.querySelector(".site-li.selected").textContent;
@@ -167,12 +204,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const newAccountName = accountNameInput.value;
       const newPassword = passwordInput.value;
       const confirmPassword = confirmPasswordInput.value;
-
-      // Debugging: log the values to check if they are correct
-      console.log('Selected Site:', selectedSite);
-      console.log('New Account Name:', newAccountName);
-      console.log('New Password:', newPassword);
-      console.log('Confirm Password:', confirmPassword);
 
       if (newPassword !== confirmPassword) {
         alert("Passwords do not match!");
@@ -183,7 +214,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const password_id = account.password_id;
 
       const response = await API.editPassword(password_id, selectedSite, newAccountName, newPassword);
-      console.log("response", response);
 
       if (response.status === "success") {
         console.log("Password updated successfully");
@@ -195,8 +225,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function cancelEdit() {
-      // Logic to revert any changes made during the edit.
-      console.log("Edit cancelled");
+  async function deletePassword() {
+    try {
+        const selectedSite = document.querySelector(".site-li.selected").textContent;
+        const selectedAccount = accountNameDropdown.options[accountNameDropdown.selectedIndex].textContent;
+        const account = window.passwordObjs[selectedSite].find(account => account.account_name === selectedAccount);
+        const password_id = account.password_id;
+
+        const response = await API.deletePassword(password_id);
+
+        if (response.status === "success") {
+            console.log("Password deleted successfully");
+        } else {
+            console.error("Failed to delete password:", response.message);
+        }
+    } catch (error) {
+        console.error("Failed to delete password:", error);
+    }
+}
+
+  // If ex-mark is clicked, cancel the edit by reloading page.
+  async function cancelEdit() {
+    await fetchPasswordData();
+    API.loadSearchView();
   }
+
+  function addHidden(elements) {
+    elements.forEach(element => {
+        element.classList.add("hidden");
+    });
+  }
+
+  function removeHidden(elements) {
+    elements.forEach(element => {
+        element.classList.remove("hidden");
+    });
+  }
+
+  function addRedBorder(elements) {
+    elements.forEach(element => {
+        element.classList.add("red-border");
+    });
+  }
+
+  function removeRedBorder(elements) {
+      elements.forEach(element => {
+          element.classList.remove("red-border");
+      });
+    }
 });
+

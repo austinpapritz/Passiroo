@@ -22,7 +22,6 @@ document.getElementById("searchPage").addEventListener("click", () => {
 // Highlight selected special characters.
 document.querySelectorAll(".spec-char-li").forEach(li => {
   li.addEventListener("click", () => {
-    console.log("clicked");
     li.classList.toggle("selected");
   });
 });
