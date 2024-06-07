@@ -155,47 +155,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Pencil and trashcan SVGs turn into checkmark and ex-mark SVGs for confirming/cancelling edit.
   pencilSvg.addEventListener("click", () => {
-    // Toggle hidden class on input fields and labels.
-    addHidden([pencilSvg, trashSvg]);
-    // Toggle visibility of SVGs.
-    removeHidden([checkmarkSvg, xmarkSvg, accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
+    const selectedSiteLi = document.querySelector(".site-li.selected");
+
+    if (selectedSiteLi) {
+      addHidden([pencilSvg, trashSvg]);
+      removeHidden([checkmarkSvg, xmarkSvg, accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
+    }
   });
 
   trashSvg.addEventListener("click", () => {
+    const selectedSiteLi = document.querySelector(".site-li.selected");
 
-    confirmingDelete = true;
-    addRedBorder([accountNameDropdown, passwordLabel]);
-    addHidden([pencilSvg, trashSvg]);
-    removeHidden([checkmarkSvg, xmarkSvg]);
+    if (selectedSiteLi) {
+      confirmingDelete = true;
+      addRedBorder([accountNameDropdown, passwordLabel]);
+      addHidden([pencilSvg, trashSvg]);
+      removeHidden([checkmarkSvg, xmarkSvg]);
+    }
+    
 });
 
   checkmarkSvg.addEventListener("click", async () => {
     if (confirmingDelete) {
-      await deletePassword();
+      await confirmDelete();
       confirmingDelete = false;
       removeRedBorder([accountNameDropdown, passwordLabel]);
     } else {
       await confirmEdit();
+      reloadPage();
     }
-    // Refetch passwords and reload page.
-    await fetchPasswordData();
-    // API.loadSearchView();
-    // Toggle back the hidden class on input fields and labels.
-    addHidden([accountNameInput, passwordInput, confirmPasswordInput, checkmarkSvg, xmarkSvg]);
-    // Toggle back visibility of SVGs.
-    removeHidden([pencilSvg, trashSvg, accountNameDropdown, passwordLabel ]);
   });
 
   xmarkSvg.addEventListener("click", () => {
-    // Handle the logic for cancelling the edit.
-    cancelEdit();
-    // Toggle back the hidden class on input fields and labels.
-    toggleHidden([accountNameInput, passwordInput, confirmPasswordInput, passwordLabel]);
-    // Toggle back visibility of SVGs.
-    toggleHidden([pencilSvg, checkmarkSvg, trashSvg, xmarkSvg]);
+    reloadPage();
   });
 
-  // If checkmark is clicked, then send new password data to backend for updating.
   async function confirmEdit() {
     try {
       const selectedSite = document.querySelector(".site-li.selected").textContent;
@@ -214,18 +208,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const password_id = account.password_id;
 
       const response = await API.editPassword(password_id, selectedSite, newAccountName, newPassword);
-
       if (response.status === "success") {
         console.log("Password updated successfully");
+        reloadPage();
       } else {
         console.error("Failed to update password:", response.message);
       }
+
     } catch (error) {
       console.error("Failed to edit password:", error);
     }
   }
 
-  async function deletePassword() {
+  async function confirmDelete() {
     try {
         const selectedSite = document.querySelector(".site-li.selected").textContent;
         const selectedAccount = accountNameDropdown.options[accountNameDropdown.selectedIndex].textContent;
@@ -236,6 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (response.status === "success") {
             console.log("Password deleted successfully");
+            reloadPage();
         } else {
             console.error("Failed to delete password:", response.message);
         }
@@ -245,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 
   // If ex-mark is clicked, cancel the edit by reloading page.
-  async function cancelEdit() {
+  async function reloadPage() {
     await fetchPasswordData();
     API.loadSearchView();
   }

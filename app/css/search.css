@@ -223,7 +223,6 @@ body {
 	width: 80%;
 	height: 2.5em;
 	padding: 0 10px;
-	border: none;
 	border-radius: 20px;
 	background: rgb(52, 51, 48, 75%);
   z-index: 30;
@@ -244,7 +243,6 @@ body {
 	width: 80%;
 	height: 2.5em;
 	padding: 0 10px;
-	border: none;
 	border-radius: 20px;
 	background: rgb(52, 51, 48, 75%);
   z-index: 30;
@@ -287,5 +285,5 @@ body {
 }
 
 .red-border {
-  border: solid red 1px;
+  border: solid #f63142 4px;
 }
