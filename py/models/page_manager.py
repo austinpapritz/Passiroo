@@ -2,26 +2,6 @@ import random
 import string
 
 class PageManager:
-    def set_page(self, page_name):
-        # Implementation to set the current page
-        pass
-
-    def clear_page(self, page_name):
-        # Implementation to clear the current page state
-        pass
-
-    def get_page_state_by_page_name(self, page_name):
-        # Implementation to retrieve specific page state
-        pass
-
-    def set_plus_page_state(self):
-        # Implementation to set plus page state
-        pass
-
-    def set_search_page_state(self):
-        # Implementation to set search page state
-        pass
-
     def create_random_password(self, special_chars, length):
         if length < 8 or length > 16:
             raise ValueError("Password length must be between 8 and 16 characters.")

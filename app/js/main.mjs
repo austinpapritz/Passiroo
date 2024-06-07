@@ -248,9 +248,9 @@ app.on("before-quit", () => {
 });
 
 // Edit password.
-ipcMain.handle("edit-password", async (event, userData) => {
+ipcMain.handle("edit-password", async (event, { password_id, site_name, account_name, password }) => {
   const pythonScriptPath = path.join(__dirname, "../../py/main.py");
-  const pyProcess = spawn("python", [pythonScriptPath, "edit_password", userData.password_id, userData.site_name, userData.account_name, userData.password]);
+  const pyProcess = spawn("python", [pythonScriptPath, "edit_password", password_id, site_name, account_name, password]);
 
   let data = "";
   let error = "";
@@ -278,5 +278,39 @@ ipcMain.handle("edit-password", async (event, userData) => {
   } catch (e) {
     console.error(`JSON parse error: ${data}`);
     return { status: "error", message: `JSON parse error: ${data}` };
+  }
+});
+
+// Delete password.
+ipcMain.handle('delete-password', async (event, password_id) => {
+  const pythonScriptPath = path.join(__dirname, '../../py/main.py');
+  const pyProcess = spawn('python', [pythonScriptPath, 'delete_password', password_id]);
+
+  let data = '';
+  let error = '';
+
+  pyProcess.stdout.on('data', (chunk) => {
+    data += chunk;
+  });
+
+  pyProcess.stderr.on('data', (chunk) => {
+    error += chunk;
+  });
+
+  const exitCode = await new Promise((resolve) => {
+    pyProcess.on('close', resolve);
+  });
+
+  if (exitCode) {
+    console.error(`subprocess error exit ${exitCode}, ${error}`);
+    return { status: 'error', message: `subprocess error exit ${exitCode}, ${error}` };
+  }
+
+  try {
+    const result = JSON.parse(data);
+    return result;
+  } catch (e) {
+    console.error(`JSON parse error: ${data}`);
+    return { status: 'error', message: `JSON parse error: ${data}` };
   }
 });

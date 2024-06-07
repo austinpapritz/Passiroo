@@ -16,6 +16,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   editPassword: async (password_id, site_name, account_name, password) => await ipcRenderer.invoke("edit-password", { password_id, site_name, account_name, password }),
 
+  deletePassword: async (password_id) => await ipcRenderer.invoke("delete-password", password_id),
+
   loadPlusView: () => ipcRenderer.send("loadPlusView"),
   loadAboutView: () => ipcRenderer.send("loadAboutView"),
   loadSearchView: () => ipcRenderer.send("loadSearchView"),

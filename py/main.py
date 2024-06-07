@@ -65,6 +65,14 @@ def edit_password(password_id, site_name, account_name, password):
         return json.dumps({"status": "success", "message": "Password successfully edited"})
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
+      
+def delete_password(password_id):
+    try:
+        # logging.debug(f"Password (id {password_id})")
+        password_manager.delete_saved_password(password_id)
+        return json.dumps({"status": "success", "message": "Password successfully deleted"})
+    except Exception as e:
+        return json.dumps({"status": "error", "message": str(e)})
 
 def generate_random_password(spec_chars, pw_length):
     try:
@@ -125,7 +133,10 @@ if __name__ == '__main__':
             site_name = sys.argv[3]
             account_name = sys.argv[4]
             password = sys.argv[5]
-            print(edit_password(password_id, site_name, account_name, password))
+            print(edit_password(password_id, site_name, account_name, password ))
+        elif action == 'delete_password':
+            password_id = sys.argv[2]
+            print(delete_password(password_id))
         elif action == 'fetch_user_id':
             print(fetch_user_id())
         elif action == 'fetch_passwords':
