@@ -142,6 +142,37 @@ body {
   gap: 3px;
 }
 
+.top input {
+  color: #fff;
+  width: 80%;
+  height: 2em;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  background: rgb(52, 51, 48, 75%);
+}
+
+.eye-button {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  border-radius: 0 20px 20px 0 !important;
+  background: rgb(52, 51, 48, 75%) !important;
+  height: 2em !important;
+}
+
+#addPasswordButton {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z' /%3E%3C/svg%3E") no-repeat center center;
+  background-size: contain;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.4); /* Add box shadow */
+}
+
 .svg-large {
   fill: none;
   stroke: currentColor;
@@ -149,29 +180,21 @@ body {
   filter: url(#dropShadowLarge);
 }
 
-.svg-small {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1;
-  filter: url(#dropShadowSmall);
-}
-
-.random-settings {
+#generateRandomPasswordForm {
   background: rgb(52, 51, 48, 75%);
-  display: flex;
   padding: 10px;
   border-radius: 40px;
+  width: 80%;
+  height: 100%;
+
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5px;
 }
 
-.spec-char-form {
-  padding: 5px;
-  background: rgb(52, 51, 48, 75%);
-  width: 80%;
-  height: 100%;
+#generateRandomPasswordForm h4 {
+  font-size: 1em;
 }
 
 .spec-char-list {
@@ -189,26 +212,39 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  user-select: none;
 }
 
-.plus-btn {
-  scale: 1;
-  padding: 10px;
-  margin-bottom: 5px;
-  border: solid #fff 4px;
-  border-radius: 250px;
-  background: rgb(52, 51, 48, 25%)
+#rangeLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  
+  font-size: 1.2em;
+  user-select: none;
 }
 
+#generateRandomPasswordButton {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='rgb(234, 182, 46)' class='size-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z' /%3E%3C/svg%3E") no-repeat center center;
+  background-size: contain;
+  border: solid rgb(234, 182, 46) 2px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5); /* Add box shadow */
+}
 
-.sparkles {
+/* .sparkles {
   scale: 1.2;
   padding: 5px;
   color: rgb(234, 182, 46);
   background: rgb(52, 51, 48, 25%);
   border: solid #fff 2px;
   border-radius: 50px;
-}
+} */
 
 .input-group {
   padding: 0px !important;;
@@ -217,16 +253,44 @@ body {
   gap: 0px !important;
 }
 
-.top input {
-  color: #fff;
-  width: 80%;
-  height: 2em;
-  padding: 10px;
-  border: none;
-  border-radius: 20px;
-  background: rgb(52, 51, 48, 75%);
-}
-
 .spec-char-list .selected {
   background: rgb(234, 182, 46, 0.75)
+}
+
+/* Modal styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  background-color: rgb(0, 205, 223);
+}
+
+.modal-content {
+  font-size: 2em !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  background-color: rgb(0, 0, 0, 0.2) !important;
+  margin: 10% 14% !important;
+  padding: 20px !important;
+  border: none !important;
+  border-radius: 20px !important;
+  width: 80% !important;
+}
+
+#closeModalButton {
+  background-color: #4CAF50 !important;
+  color: #fff !important;
+  padding: 10px 20px !important;
+  border: none !important;
+  cursor: pointer;
+  border-radius: 40px !important;
+  width: 100% !important;
+}
+
+#closeModalButton:hover {
+  background-color: #45a049;
 }

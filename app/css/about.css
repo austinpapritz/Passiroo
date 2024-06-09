@@ -155,15 +155,9 @@ body {
 }
 
 .svg-small {
+  height: 100%;
+  width: 100%;
 	scale: 0.75;
-	fill: none;
-	filter: url(#dropShadowLarge);
-}
-
-.svg-smaller {
-	scale: 1;
-	width: 30%;
-	
 	fill: none;
 	filter: url(#dropShadowLarge);
 }

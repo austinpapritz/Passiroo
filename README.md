@@ -10,11 +10,7 @@ Passiroo is a lightweight desktop password manager — backend rigorously built 
 ![Add new password page](/public/passiroo-about-design.png)
 
 To-dos:
-Delete passwords
-  Give labels red borders
-Double check login/register work
 Fix tests
-Forms disable after adding password?
 Slide animation on main content
 Click-through on transparent bg?
 close/minimize/drag from passiroo

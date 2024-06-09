@@ -53,50 +53,6 @@ ipcMain.on("loadAboutView", () => {
 
 app.on("ready", createWindow);
 
-// Add new saved password.
-ipcMain.on("addPassword", (event, userData) => {
-  const pythonScriptPath = path.join(__dirname, "../../py/main.py");
-  const pyProcess = spawn("python", [pythonScriptPath, "add_password", userData.user_id, userData.site_name, userData.account_name, userData.password]);
-
-  let data = "";
-  let error = "";
-
-  pyProcess.stdout.on("data", (chunk) => {
-    data += chunk;
-  });
-
-  pyProcess.stderr.on("data", (chunk) => {
-    error += chunk;
-  });
-
-  pyProcess.on("close", (code) => {
-    if (code === 0) {
-      event.reply("add-password-success", "Password added successfully");
-    } else {
-      event.reply("add-password-failure", "Failed to add password");
-    }
-  });
-});
-
-// Generate random password.
-ipcMain.on("generateRandomPassword", (event, { specChars, pwLength }) => {
-  const pythonScriptPath = path.join(__dirname, "../../py/main.py");
-  const pyProcess = spawn("python", [pythonScriptPath, "generate_random_password", specChars, pwLength]);
-
-  pyProcess.stderr.on("data", (data) => {
-    console.error(`stderr: ${data}`);
-  });
-
-  pyProcess.stdout.on("data", (data) => {
-    const result = JSON.parse(data.toString());
-    if (result.status === "success") {
-      event.reply("generate-random-password-success", { password: result.password });
-    } else {
-      event.reply("generate-random-password-failure", result.message);
-    }
-  });
-});
-
 ipcMain.on("loadPlusView", () => {
   if (mainWindow) {
     mainWindow.loadFile("app/views/plus.html");
@@ -153,6 +109,50 @@ ipcMain.on("login", (event, userData) => {
 
   pyProcess.on("close", (code) => {
     console.log(`Python script exited with code ${code}`);
+  });
+});
+
+// Add new saved password.
+ipcMain.on("addPassword", (event, userData) => {
+  const pythonScriptPath = path.join(__dirname, "../../py/main.py");
+  const pyProcess = spawn("python", [pythonScriptPath, "add_password", userData.user_id, userData.site_name, userData.account_name, userData.password]);
+
+  let data = "";
+  let error = "";
+
+  pyProcess.stdout.on("data", (chunk) => {
+    data += chunk;
+  });
+
+  pyProcess.stderr.on("data", (chunk) => {
+    error += chunk;
+  });
+
+  pyProcess.on("close", (code) => {
+    if (code === 0) {
+      event.reply("add-password-success", "Password added successfully");
+    } else {
+      event.reply("add-password-failure", "Failed to add password");
+    }
+  });
+});
+
+// Generate random password.
+ipcMain.on("generateRandomPassword", (event, data) => {
+  const pythonScriptPath = path.join(__dirname, "../../py/main.py");
+  const pyProcess = spawn("python", [pythonScriptPath, "generate_random_password", data.specialCharacters, data.passwordLength]);
+
+  pyProcess.stderr.on("data", (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  pyProcess.stdout.on("data", (data) => {
+    const result = JSON.parse(data.toString());
+    if (result.status === "success") {
+      event.reply("generate-random-password-success", { password: result.password });
+    } else {
+      event.reply("generate-random-password-failure", result.message);
+    }
   });
 });
 
