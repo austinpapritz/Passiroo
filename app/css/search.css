@@ -317,3 +317,19 @@ body {
 .hidden {
   display: none !important;
 }
+
+/* Animation for clicking copy-icon */
+.check-emoji {
+  color: rgb(38, 168, 108);
+  position: absolute;
+  font-size: 3em;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none; 
+  z-index: 1000;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
