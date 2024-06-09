@@ -147,15 +147,41 @@ function copyAccountNameToClipboard() {
   const accountNameDropdown = document.getElementById("accountNameDropdown");
   const text = accountNameDropdown.options[accountNameDropdown.selectedIndex].textContent;
   navigator.clipboard.writeText(text).catch(err => {
-    console.error('Failed to copy:', err);
+    console.error("Failed to copy:", err);
   });
+  showCheckEmoji();
 }
 function copyPasswordToClipboard() {
   const passwordLabel = document.getElementById("passwordLabel");
   const text = passwordLabel.textContent;
   navigator.clipboard.writeText(text).catch(err => {
-    console.error('Failed to copy:', err);
+    console.error("Failed to copy:", err);
   });
+  showCheckEmoji();
+}
+
+function showCheckEmoji() {
+  const checkEmoji = document.createElement("div");
+  checkEmoji.className = "check-emoji";
+  checkEmoji.textContent = '\u2714'; // Unicode character for checkmark
+  document.body.appendChild(checkEmoji);
+
+  const handleMouseMove = (event) => {
+    checkEmoji.style.left = `${event.pageX - 30}px`;
+    checkEmoji.style.top = `${event.pageY - 45}px`;
+  };
+
+  document.addEventListener("mousemove", handleMouseMove);
+
+  checkEmoji.style.opacity = 1;
+
+  setTimeout(() => {
+    checkEmoji.style.opacity = 0;
+    checkEmoji.addEventListener("transitionend", () => {
+      checkEmoji.remove();
+      document.removeEventListener("mousemove", handleMouseMove);
+    });
+  }, 1000); // Show the emoji for 500ms
 }
 
 // Edit and delete password.
