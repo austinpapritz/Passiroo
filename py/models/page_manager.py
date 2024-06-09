@@ -2,7 +2,7 @@ import random
 import string
 
 class PageManager:
-    def create_random_password(self, special_chars, length):
+    def generate_random_password(self, special_chars, length):
         if length < 8 or length > 16:
             raise ValueError("Password length must be between 8 and 16 characters.")
 

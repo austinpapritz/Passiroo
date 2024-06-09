@@ -64,22 +64,14 @@ document.getElementById("addNewPasswordToDatabaseForm").addEventListener("submit
 });
 
 // Update label when pwLength input changes.
-const pwLengthInput = document.querySelector("input[name='pwLength']");
+const passwordLengthInput = document.querySelector("input[name='passwordLength']");
 const rangeLabel = document.getElementById("rangeLabel");
-
-pwLengthInput.addEventListener("input", (event) => {
+passwordLengthInput.addEventListener("input", (event) => {
   const value = event.target.value;
   const labelTextNode = rangeLabel.firstChild;
-
-  // Update the text node with the new value.
-  if (labelTextNode) {
-    labelTextNode.nodeValue = value;
-  } else {
-    rangeLabel.textContent = value;
-  }
+  labelTextNode.nodeValue = value;
 });
 
-// Custom alert function.
 function showCustomAlert(message) {
   const modal = document.getElementById("customAlertModal");
   const messageElement = document.getElementById("customAlertMessage");
@@ -100,6 +92,22 @@ function showCustomAlert(message) {
   };
 }
 
+document.querySelectorAll(".toggle-password").forEach(button => {
+  button.addEventListener("click", () => {
+    const input = button.closest('.input-group').querySelector('input');
+    const icon = button.firstElementChild;
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove("fa-eye-slash");
+      icon.classList.add("fa-eye");
+    } else {
+      input.type = "password";
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
+    }
+  });
+});
+
 // Highlight selected special characters for generating password.
 document.querySelectorAll(".spec-char-li").forEach(li => {
   li.addEventListener("click", () => {
@@ -107,41 +115,53 @@ document.querySelectorAll(".spec-char-li").forEach(li => {
   });
 });
 
-// Handle generate random password.
-document.getElementById("generatePasswordButton").addEventListener("click", () => {
-  const specChars = Array.from(document.querySelectorAll(".spec-char-li"))
+document.getElementById("generateRandomPasswordForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const specialCharacters = selectedSpecialCharacters()
+  const passwordLength = document.querySelector("input[name='passwordLength']").value;
+  console.log('specialCharacters', specialCharacters)
+  console.log('passwordLength', passwordLength)
+  generateRandomPasswordFromCharactersAndLength(specialCharacters, passwordLength)
+});
+
+function selectedSpecialCharacters() {
+  return Array.from(document.querySelectorAll(".spec-char-li"))
     .filter(li => li.classList.contains("selected"))
     .map(li => li.getAttribute("value"))
     .join("");
-  const pwLength = document.querySelector("input[name='pwLength']").value;
+}
 
-  // Send data to backend to generate a random password.
+function generateRandomPasswordFromCharactersAndLength(specialCharacters, passwordLength) {
   if (API) {
-    API.generateRandomPassword({ specChars, pwLength });
+    API.generateRandomPassword({ specialCharacters, passwordLength });
   } else {
     console.error("electronAPI is not available");
   }
-});
+}
 
+listenForBackendResponse()
 
-// Listen for the backend responses.
-if (API) {
-  API.onAddPasswordSuccess((event, message) => {
-    showCustomAlert("Password added successfully!");
-  });
-
-  API.onAddPasswordFailure((event, message) => {
-    showCustomAlert(`Failed to add password: ${message}`);
-  });
-
-  API.onGenerateRandomPasswordSuccess((event, { password }) => {
-    document.getElementById("passwordInput").value = password;
-    document.getElementById("confirmPasswordInput").value = password;
-  });
-
-  API.onGenerateRandomPasswordFailure((event, message) => {
-    showCustomAlert(`Failed to generate password: ${message}`);
-  });
-} else {
-  console.error("Electron APIs are not available.");
+function listenForBackendResponse() {
+  if (API) {
+    API.onAddPasswordSuccess((event, message) => {
+      showCustomAlert("Password added successfully!");
+    });
+  
+    API.onAddPasswordFailure((event, message) => {
+      showCustomAlert(`Failed to add password: ${message}`);
+    });
+  
+    API.onGenerateRandomPasswordSuccess((event, { password }) => {
+      console.log('password', password);
+      document.getElementById("passwordInput").value = password;
+      document.getElementById("confirmPasswordInput").value = password;
+    });
+  
+    API.onGenerateRandomPasswordFailure((event, message) => {
+      showCustomAlert(`Failed to generate password: ${message}`);
+    });
+  } else {
+    console.error("Electron APIs are not available.");
+  }
 }

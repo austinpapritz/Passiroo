@@ -74,9 +74,9 @@ def delete_password(password_id):
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
 
-def generate_random_password(spec_chars, pw_length):
+def generate_random_password(special_characters, password_length):
     try:
-        password = page_manager.create_random_password(spec_chars, int(pw_length))
+        password = page_manager.generate_random_password(special_characters, int(password_length))
         return json.dumps({"status": "success", "password": password})
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})  
@@ -128,6 +128,10 @@ if __name__ == '__main__':
             account_name = sys.argv[4]
             password = sys.argv[5]
             print(add_password(user_id, site_name, account_name, password))
+        elif action == 'generate_random_password':
+            special_characters = sys.argv[2]
+            password_length = sys.argv[3]
+            print(generate_random_password(special_characters, password_length))
         elif action == 'edit_password':
             password_id = sys.argv[2]
             site_name = sys.argv[3]
