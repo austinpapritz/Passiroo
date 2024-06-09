@@ -2,7 +2,7 @@ import sqlite3
 
 def create_database():
     # Connect to the SQLite database. If it doesn't exist, it will be created.
-    conn = sqlite3.connect('passiroo.db')
+    conn = sqlite3.connect("passiroo.db")
 
     # Create the tables
     with conn:

@@ -19,14 +19,14 @@ class TestPageManager(unittest.TestCase):
       # Test valid lengths
           for length in valid_lengths:
               with self.subTest(length=length):
-                  result = self.page_manager.create_random_password(special_chars, length)
+                  result = self.page_manager.generate_random_password(special_chars, length)
                   self.assertEqual(len(result), length, f"Failed for length {length}")
 
       # Test invalid lengths
           for length in invalid_lengths:
               with self.subTest(length=length):
                   with self.assertRaises(ValueError, msg=f"Should raise error for length {length}"):
-                      self.page_manager.create_random_password(special_chars, length)
+                      self.page_manager.generate_random_password(special_chars, length)
                       
   def test_pageManager_createRandomPassword_outputContainsCorrectSpecialChars(self):
       # Assemble
@@ -36,9 +36,9 @@ class TestPageManager(unittest.TestCase):
           length = 12
           
       # Act
-          result1 = self.page_manager.create_random_password(special_chars1, length)
-          result2 = self.page_manager.create_random_password(special_chars2, length)
-          result3 = self.page_manager.create_random_password(special_chars3, length)
+          result1 = self.page_manager.generate_random_password(special_chars1, length)
+          result2 = self.page_manager.generate_random_password(special_chars2, length)
+          result3 = self.page_manager.generate_random_password(special_chars3, length)
 
       # Assert
           for char in special_chars1:
@@ -60,7 +60,7 @@ class TestPageManager(unittest.TestCase):
           digits = set(string.digits)
           
       # Act
-          results = [self.page_manager.create_random_password(special_chars, length) for _ in range(3)]
+          results = [self.page_manager.generate_random_password(special_chars, length) for _ in range(3)]
 
       # Assert
           for i, result in enumerate(results, 1):
@@ -74,7 +74,7 @@ class TestPageManager(unittest.TestCase):
           length = 12
 
       # Act
-          results = [self.page_manager.create_random_password(special_chars, length) for _ in range(10)]
+          results = [self.page_manager.generate_random_password(special_chars, length) for _ in range(10)]
 
       # Assert
           seen_passwords = set()

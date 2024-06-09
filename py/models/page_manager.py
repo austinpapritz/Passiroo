@@ -7,7 +7,7 @@ class PageManager:
             raise ValueError("Password length must be between 8 and 16 characters.")
 
         # Ensure special_chars contains unique characters only
-        special_chars = ''.join(set(special_chars))
+        special_chars = "".join(set(special_chars))
 
         # Check if the length is sufficient to include all types of characters
         if length < len(special_chars) + 3:
@@ -37,4 +37,4 @@ class PageManager:
         random.shuffle(password)
 
         # Return the password as a string
-        return ''.join(password)
+        return "".join(password)

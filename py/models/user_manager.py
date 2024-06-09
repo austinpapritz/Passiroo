@@ -6,7 +6,7 @@ import re
 
 class UserManager(object):
     _instance = None
-    SESSION_FILE = 'current_user.json'
+    SESSION_FILE = "current_user.json"
     
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
@@ -14,12 +14,11 @@ class UserManager(object):
         return cls._instance
   
     def __init__(self, db_connection):
-        if not hasattr(self, 'initialized'):  # Ensure init is only called once
+        if not hasattr(self, "initialized"):
             self.db_connection = db_connection
             self._current_user_id = self.load_session()
             self.initialized = True
-            # print(f"UserManager initialized with user_id: {self._current_user_id}")
-        
+
     @property
     def current_user_id(self):
         return self._current_user_id
@@ -35,14 +34,14 @@ class UserManager(object):
         self.save_session()
 
     def save_session(self):
-        with open(self.SESSION_FILE, 'w') as f:
-            json.dump({'user_id': self._current_user_id}, f)
+        with open(self.SESSION_FILE, "w") as f:
+            json.dump({"user_id": self._current_user_id}, f)
 
     def load_session(self):
         if os.path.exists(self.SESSION_FILE):
-            with open(self.SESSION_FILE, 'r') as f:
+            with open(self.SESSION_FILE, "r") as f:
                 data = json.load(f)
-                return data.get('user_id', None)
+                return data.get("user_id", None)
         return None
 
     def hash_password(self, password):
@@ -64,7 +63,7 @@ class UserManager(object):
         if not re.search(r"[!@#&%^&._-]", password):
             raise ValueError("Password must contain at least one special character (!@#&%^&._-).")
 
-    def register_user(self, email, password):
+    def register_and_login_user(self, email, password):
         try:
             self.password_validator(password)
             hashed_password = self.hash_password(password)

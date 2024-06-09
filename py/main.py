@@ -39,8 +39,8 @@ logging.basicConfig(filename='app.log', level=logging.DEBUG)
 
 create_database()
 
-def register_user(email, password):
-    result = user_manager.register_user(email, password)
+def register_and_login_user(email, password):
+    result = user_manager.register_and_login_user(email, password)
     return json.dumps(result)
 
 def login_user(email, password):
@@ -112,10 +112,10 @@ def logout_user():
 if __name__ == '__main__':
     try:
         action = sys.argv[1]
-        if action == 'register_user':
+        if action == 'register_and_login_user':
             email = sys.argv[2]
             password = sys.argv[3]
-            print(register_user(email, password))
+            print(register_and_login_user(email, password))
         elif action == 'login_user':
             email = sys.argv[2]
             password = sys.argv[3]

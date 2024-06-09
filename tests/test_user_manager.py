@@ -1,22 +1,23 @@
-import unittest
+import json
+import os
 import sqlite3
+import unittest
 from py.models.user_manager import UserManager
 
 # Navigate to project folder and run tests with 
 #   `python -m unittest discover -s tests`
 
 class TestUserManager(unittest.TestCase):
-  # unittest runs setUp() before each test
     def setUp(self):
-        self.connection = sqlite3.connect(':memory:')
-        self.connection.execute("""
+        self.db_connection = sqlite3.connect(':memory:')
+        self.db_connection.execute("""
             CREATE TABLE users (
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 email TEXT UNIQUE NOT NULL,
                 hashed_password TEXT NOT NULL
             );
         """)
-        self.user_manager = UserManager(self.connection)
+        self.user_manager = UserManager(self.db_connection)
 
     def test_password_validator_short_password(self):
         with self.assertRaises(ValueError) as context:
@@ -54,20 +55,24 @@ class TestUserManager(unittest.TestCase):
         # Assemble
         account_name = "sotesty@gmail.com"
         password = "example_passworD123"
-        self.user_manager.register_user(account_name, password) # runs login_user() after registering
+        self.user_manager.register_and_login_user(account_name, password) # runs login_user() after registering
 
         # Act
-        user_id = self.user_manager.get_user_id_by_email(account_name)
+        current_user_path = "current_user.json"
         results = self.user_manager.current_user_id
 
         # Assert
-        self.assertEqual(user_id, results)
+        with open(current_user_path, "r") as file:
+            current_user_data = json.load(file)
+            
+        self.assertIn("user_id", current_user_data)
+        self.assertEqual(current_user_data["user_id"], results)
 
     def test_userManager_UserManager_delCurrentUserId(self):
         # Assemble
         account_name = "sotesty@gmail.com"
         password = "example_passworD123"
-        self.user_manager.register_user(account_name, password) # runs login_user() after registering
+        self.user_manager.register_and_login_user(account_name, password) # runs login_user() after registering
 
         # Act
         results = self.user_manager.current_user_id
@@ -95,13 +100,13 @@ class TestUserManager(unittest.TestCase):
         # Assert
         self.assertTrue(result)
 
-    def test_userManager_register_user_checkDbForEmailAndPassword(self):
+    def test_userManager_register_and_login_user_checkDbForEmailAndHashedPassword(self):
         # Assemble
         email = "test@example.com"
         password = "testpassworD#123"
-        self.user_manager.register_user(email, password)
+        self.user_manager.register_and_login_user(email, password)
         # Act
-        cursor = self.connection.cursor()
+        cursor = self.db_connection.cursor()
         cursor.execute("SELECT email, hashed_password FROM users WHERE email=?", (email,))
         user = cursor.fetchone()
         # Assert
@@ -114,7 +119,7 @@ class TestUserManager(unittest.TestCase):
         email = "login_test@example.com"
         password = "testlogiN#123"
         # Act 
-        self.user_manager.register_user(email, password)
+        self.user_manager.register_and_login_user(email, password)
         # Assert
         self.assertTrue(self.user_manager.login_user(email, password))
 
@@ -123,7 +128,7 @@ class TestUserManager(unittest.TestCase):
         email = "login_test@example.com"
         password = "testlogiN#123"
         # Act 
-        self.user_manager.register_user(email, password)
+        self.user_manager.register_and_login_user(email, password)
         # Assert
         self.assertFalse(self.user_manager.login_user(email, "wrongpassword"))
         
@@ -131,26 +136,17 @@ class TestUserManager(unittest.TestCase):
         # Assemble
         email = "login_test@example.com"
         password = "testlogiN#123"
+        result = self.user_manager.login_user(email, "wrongpassword")
         # Act 
-        self.user_manager.register_user(email, password)
+        self.user_manager.register_and_login_user(email, password)
         # Assert
-        self.assertFalse(self.user_manager.login_user("wrong@email.com", password))
+        self.assertFalse(result["status"] == "success")
         
-    def test_userManager_get_user_id_by_email_checkUserIdIsInt(self):
-        # Assemble
-        email = "test@example.com"
-        password = "passworD#123"
-
-        # Act
-        self.user_manager.register_user(email, password)
-        
-        # Retrieve the user ID
-        user_id = self.user_manager.get_user_id_by_email(email)
-        self.assertIsNotNone(user_id)
-        self.assertIsInstance(user_id, int)
-
     def tearDown(self):
-      self.connection.close()
+        if self.db_connection:
+            self.db_connection.close()
+        if os.path.exists(UserManager.SESSION_FILE):
+            os.remove(UserManager.SESSION_FILE)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

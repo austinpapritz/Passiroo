@@ -63,7 +63,7 @@ ipcMain.on("loadPlusView", () => {
 // New user registration.
 ipcMain.on("register", (event, userData) => {
   const pythonScriptPath = path.join(__dirname, "../../py/main.py");
-  const pyProcess = spawn("python", [pythonScriptPath, "register_user", userData.email, userData.password]);
+  const pyProcess = spawn("python", [pythonScriptPath, "register_and_login_user", userData.email, userData.password]);
 
   pyProcess.stdout.on("data", (data) => {
     const response = JSON.parse(data.toString());
