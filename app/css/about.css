@@ -40,18 +40,30 @@ body {
 	grid-area: 1 / 1 / 2 / 2;
 	height: 60px;
 	background-image: linear-gradient(90deg, #00e8fc 0%, #f9c846 31%, #f96e46 86%);
+
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	border-radius: 20px 20px 0 0;
 	align-self: end;
+
+	border-radius: 20px 20px 0 0;
 	width: 80%;
 	margin-left: 0;
 	z-index: 40;
+
+  -webkit-app-region: drag;
 }
 
 .passiroo h1 {
 	font-size: 1.8rem;
+  user-select: none;
+}
+
+.svg-large {
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1;
+	filter: url(#dropShadowLarge);
 }
 
 .plus {
@@ -145,13 +157,6 @@ body {
 	width: 50%;
 	border-radius: 0 20px 20px 0;
 	background: #130F0C
-}
-
-.svg-large {
-	fill: none;
-	stroke: currentColor;
-	stroke-width: 1;
-	filter: url(#dropShadowLarge);
 }
 
 .svg-small {

@@ -58,7 +58,6 @@ if (API) {
   const errorLabel = document.getElementById("error-msg");
 
   API.onRegisterSuccess((event, message) => {
-    console.log(message);
     API.loadPlusView();
   });
 
@@ -68,7 +67,6 @@ if (API) {
   });
 
   API.onLoginSuccess((event, message) => {
-    console.log(message);
     API.loadPlusView();
   });
 
