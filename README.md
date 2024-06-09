@@ -1,4 +1,6 @@
-Passiroo is a lightweight desktop password manager — backend rigorously built in Python, frontend executed with Electron.js. It is still under construction, but enjoy these screenshots until then.
+# Passiroo
+
+Passiroo is a lightweight desktop password manager — backend rigorously built in Python using SQLite, frontend executed with Electron.js. Enjoy these screenshots.
 
 # Add new password
 ![Add new password page](/public/passiroo-plus-design.png)

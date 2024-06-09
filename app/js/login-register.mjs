@@ -33,26 +33,22 @@ document.getElementById("loginButton").addEventListener("click", () => {
 document.getElementById("registerButton").addEventListener("click", (e) => {
   e.preventDefault();
 
-  const email = document.getElementById("emailInput");
-  const confirmPassword = document.getElementById("confirmPasswordInput");
-  const password = document.getElementById("passwordInput");
+  const emailInput = document.getElementById("emailInput");
+  const confirmPasswordInput = document.getElementById("confirmPasswordInput");
+  const passwordInput = document.getElementById("passwordInput");
 
-  // Ensure confirmPasswordInput is required
-  confirmPassword.setAttribute("required", "");
+  confirmPasswordInput.setAttribute("required", "");
 
-  // Check if the password matches the confirm password
   if (passwordInput.value !== confirmPasswordInput.value) {
-    // If they don"t match, add Bootstrap"s is-invalid class to show the error
     confirmPasswordInput.classList.add("is-invalid");
-    confirmPasswordInput.nextElementSibling.innerHTML = "Passwords do not match."; // Assumes there is a div for feedback immediately following the input
-    return; // Stop the function from proceeding
+    confirmPasswordInput.nextElementSibling.innerHTML = "Passwords do not match.";
+    return; 
   } else {
-    // If they match, remove any invalid class that might have been added previously
     confirmPasswordInput.classList.remove("is-invalid");
   }
 
   if (API) {
-    API.sendRegister({ email: email.value, password: password.value });
+    API.sendRegister({ email: emailInput.value, password: passwordInput.value });
   } else {
     console.error("electronAPI is not available");
   }
@@ -67,17 +63,17 @@ if (API) {
   });
 
   API.onRegisterFailure((event, message) => {
-    console.error(message); // Handle registration failure
+    console.error(message);
     errorLabel.innerHTML = message;
   });
 
   API.onLoginSuccess((event, message) => {
-    console.log(message); // Handle successful login
+    console.log(message);
     API.loadPlusView();
   });
 
   API.onLoginFailure((event, message) => {
-    console.error(message); // Handle login failure
+    console.error(message);
     errorLabel.innerHTML = message;
   });
 } else {
