@@ -98,6 +98,13 @@ body {
   cursor: pointer;
 }
 
+.svg-large {
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1;
+	filter: url(#dropShadowLarge);
+}
+
 .top {
 	grid-area: 2 / 2 / 3 / 3;
 	background: rgb(234, 182, 46);
@@ -111,60 +118,11 @@ body {
   z-index: 20;
 }
 
-.middle {
-	grid-area: 3 / 2 / 4 / 3;
-	background: rgb(234, 182, 46);
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: start;
-	gap: 10px;
-	z-index: -10;
-	transform: translateX(-8%);
-	padding-left: 8%;
-  z-index: 20;
-}
-
-.bottom {
-	grid-area: 4 / 2 / 5 / 3;
-	background: rgb(234, 182, 46);
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-	z-index: -10;
-	transform: translateX(-8%);
-	padding-left: 8%;
-  z-index: 20;
-}
-
 .top h3 {
   padding: 6px 0 0 0;
   margin: 0;
 	font-size: 1rem;
 	font-weight: 700;
-}
-
-.svg-large {
-	fill: none;
-	stroke: currentColor;
-	stroke-width: 1;
-	filter: url(#dropShadowLarge);
-}
-
-.pencil-svg {
-	scale: 0.5;
-	padding: 5px;
-	color: rgb(38, 168, 108);
-	border: solid rgb(38, 168, 108) 15px;
-	border-radius: 150px;
-}
-
-.trash-svg {
-	scale: 0.5;
-	padding: 5px;
-	color: #ff4e5c;
-	border: solid #ff4e5c 15px;
-	border-radius: 150px;
 }
 
 .top .site-search-container {
@@ -179,7 +137,7 @@ body {
 .top input {
 	font-size: 1.1em;
 	color: #fff;
-	width: 80%;
+	width: 85%;
 	height: 2em;
 	padding-left: 15px;
 	border: none;
@@ -212,16 +170,52 @@ body {
 	padding-left: 5px;
 	list-style-type: none;
 	color: #fff;
-	width: 73%;
+	width: 78%;
 	border: solid rgb(52, 51, 48, 50%) 1px;
 	background: rgb(52, 51, 48, 75%);
+}
+
+.site-li {
+  padding: 2px 8px !important;
+  z-index: 100 !important;
+}
+
+.site-li:hover {
+  background: rgb(52, 51, 48, 40%) !important;
+}
+
+.site-li:last-child {
+  border-radius: 0 0 20px 20px;
+}
+
+.selected {
+  background: rgb(52, 51, 48, 40%) !important;
+}
+
+.middle {
+	grid-area: 3 / 2 / 4 / 3;
+	background: rgb(234, 182, 46);
+	z-index: -10;
+	transform: translateX(-8%);
+	padding-left: 8%;
+  z-index: 20;
+}
+
+.middle-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: start;
+	gap: 5px;
 }
 
 .middle select {
 	font-size: 1em;
 	color: #fff !important;
 	width: 80%;
-	height: 2.5em;
+	height: 2em;
 	padding: 0 10px;
 	border-radius: 20px;
 	background: rgb(52, 51, 48, 75%);
@@ -241,17 +235,50 @@ body {
 	font-size: 1em;
 	color: #fff;
 	width: 80%;
-	height: 2.5em;
+	height: 2em;
 	padding: 0 10px;
 	border-radius: 20px;
 	background: rgb(52, 51, 48, 75%);
   z-index: 30;
 }
 
-.middle input {
-	color: #fff;
-	width: 80%;
-	height: 2.5em;
+.copy-icon {
+  cursor: pointer !important;
+}
+
+.red-border {
+  border: solid #f63142 4px;
+}
+
+.account-name-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.password-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-inputs-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+}
+
+.edit-inputs-container input {
+  color: #fff;
+	width: 85%;
+	height: 1.5em;
 	padding: 0 10px;
 	border: none;
 	border-radius: 20px;
@@ -259,31 +286,34 @@ body {
   z-index: 30;
 }
 
+.bottom {
+	grid-area: 4 / 2 / 5 / 3;
+	background: rgb(234, 182, 46);
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	z-index: -10;
+	transform: translateX(-8%);
+	padding-left: 8%;
+  z-index: 20;
+}
+
+.pencil-svg {
+	scale: 0.5;
+	padding: 5px;
+	color: rgb(38, 168, 108);
+	border: solid rgb(38, 168, 108) 15px;
+	border-radius: 150px;
+}
+
+.trash-svg {
+	scale: 0.5;
+	padding: 5px;
+	color: #ff4e5c;
+	border: solid #ff4e5c 15px;
+	border-radius: 150px;
+}
+
 .hidden {
-  display: none;
-}
-
-.site-li {
-  padding: 2px 8px !important;
-  z-index: 100 !important;
-}
-
-.site-li:hover {
-  background: rgb(52, 51, 48, 40%) !important;
-}
-
-.site-li:last-child {
-  border-radius: 0 0 20px 20px;
-}
-
-.hidden {
-  display: none;
-}
-
-.selected {
-  background: rgb(52, 51, 48, 40%) !important;
-}
-
-.red-border {
-  border: solid #f63142 4px;
+  display: none !important;
 }

@@ -27,7 +27,7 @@ searchPage.addEventListener("click", () => {
   API.loadSearchView();
 });
 
-// Fetches password object from backend. Example of passwordObj below:
+// Example of passwordObj below:
 // {
 //   "site_name": [
 //     {
@@ -67,12 +67,13 @@ async function fetchPasswordData() {
     console.error("electronAPI is not available");
   }
 }
-// Populating site name search / dropdown list.
+
 document.addEventListener("DOMContentLoaded", async () => {
   await fetchPasswordData();
   document.getElementById("siteSearch").focus();
 });
 
+// Populating site name search / dropdown list.
 function populateSiteList(passwordObjs) {
   const siteUL = document.getElementById("site-ul");
   const passwordLabel = document.getElementById("passwordLabel");
@@ -124,6 +125,7 @@ function populatePasswordLabel(password) {
   passwordLabel.textContent = password;
 }
 
+// Activated onkeyup for website search.
 function filterSearch() {
   const input = document.getElementById("siteSearch");
   const filter = input.value.toLowerCase();
@@ -140,6 +142,22 @@ function filterSearch() {
   }
 }
 
+// Activated by onClick for each copy-icon.
+function copyAccountNameToClipboard() {
+  const accountNameDropdown = document.getElementById("accountNameDropdown");
+  const text = accountNameDropdown.options[accountNameDropdown.selectedIndex].textContent;
+  navigator.clipboard.writeText(text).catch(err => {
+    console.error('Failed to copy:', err);
+  });
+}
+function copyPasswordToClipboard() {
+  const passwordLabel = document.getElementById("passwordLabel");
+  const text = passwordLabel.textContent;
+  navigator.clipboard.writeText(text).catch(err => {
+    console.error('Failed to copy:', err);
+  });
+}
+
 // Edit and delete password.
 document.addEventListener("DOMContentLoaded", () => {
   const pencilSvg = document.getElementById("pencilSvg");
@@ -148,8 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const xmarkSvg = document.querySelector(".trash-svg.hidden");
   const accountNameDropdown = document.getElementById("accountNameDropdown");
   const passwordLabel = document.getElementById("passwordLabel");
-  const accountNameInput = document.querySelector(".middle input[placeholder='account name']");
-  const passwordInput = document.querySelector(".middle input[placeholder='password']");
+  const accountNameInput = document.querySelector(".middle input[placeholder='new account name']");
+  const passwordInput = document.querySelector(".middle input[placeholder='new password']");
   const confirmPasswordInput = document.querySelector(".middle input[placeholder='confirm password']");
 
   let confirmingDelete = false;
@@ -243,7 +261,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // If ex-mark is clicked, cancel the edit by reloading page.
   async function reloadPage() {
-    await fetchPasswordData();
     API.loadSearchView();
   }
 

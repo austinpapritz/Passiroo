@@ -11,12 +11,6 @@ Passiroo is a lightweight desktop password manager — backend rigorously built 
 
 To-dos:
 Fix tests
-Plus page
-  eyeball functionality
-Search page
-  Do I need the filterSearch function??
-  Copy shortcut
-Fix weird spacing throughout html
 Slide animation on main content
 Click-through on transparent bg?
 close/minimize/drag from passiroo
