@@ -181,7 +181,7 @@ function showCheckEmoji() {
       checkEmoji.remove();
       document.removeEventListener("mousemove", handleMouseMove);
     });
-  }, 1000); // Show the emoji for 500ms
+  }, 1000);
 }
 
 // Edit and delete password.
@@ -254,7 +254,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const response = await API.editPassword(password_id, selectedSite, newAccountName, newPassword);
       if (response.status === "success") {
-        console.log("Password updated successfully");
         reloadPage();
       } else {
         console.error("Failed to update password:", response.message);
@@ -275,7 +274,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const response = await API.deletePassword(password_id);
 
         if (response.status === "success") {
-            console.log("Password deleted successfully");
             reloadPage();
         } else {
             console.error("Failed to delete password:", response.message);

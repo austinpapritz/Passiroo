@@ -14,8 +14,3 @@ Passiroo is a lightweight desktop password manager — backend rigorously built 
 To-dos:
 Fix tests
 Slide animation on main content
-Click-through on transparent bg?
-close/minimize/drag from passiroo
-logging out
-session timed log out?
-Hardcode a delay to figure out why login reloads on login

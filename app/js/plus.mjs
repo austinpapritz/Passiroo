@@ -120,8 +120,6 @@ document.getElementById("generateRandomPasswordForm").addEventListener("submit",
 
   const specialCharacters = selectedSpecialCharacters()
   const passwordLength = document.querySelector("input[name='passwordLength']").value;
-  console.log('specialCharacters', specialCharacters)
-  console.log('passwordLength', passwordLength)
   generateRandomPasswordFromCharactersAndLength(specialCharacters, passwordLength)
 });
 
@@ -153,7 +151,6 @@ function listenForBackendResponse() {
     });
   
     API.onGenerateRandomPasswordSuccess((event, { password }) => {
-      console.log('password', password);
       document.getElementById("passwordInput").value = password;
       document.getElementById("confirmPasswordInput").value = password;
     });

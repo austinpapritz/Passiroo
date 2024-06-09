@@ -14,21 +14,20 @@ function createWindow() {
     width: 800,
     height: 660,
     transparent: true,
+    titleBarStyle: "hidden",
+    frame: false, 
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
       nodeIntegration: false,
       enableRemoteModule: false,
     }
-    // Uncomment if you want to hide the title bar:
-    // titleBarStyle: "hidden"
   });
   mainWindow.loadFile("app/views/login-register.html");
-  // Uncomment to open the DevTools:
-  // mainWindow.webContents.openDevTools();
 }
 
-// Load Plus/Search/About views.
+app.on("ready", createWindow);
+
 ipcMain.on("loadPlusView", () => {
   if (mainWindow) {
     mainWindow.loadFile("app/views/plus.html");
@@ -36,6 +35,7 @@ ipcMain.on("loadPlusView", () => {
     console.error("Main window is not available.");
   }
 });
+
 ipcMain.on("loadSearchView", () => {
   if (mainWindow) {
     mainWindow.loadFile("app/views/search.html");
@@ -43,6 +43,7 @@ ipcMain.on("loadSearchView", () => {
     console.error("Main window is not available.");
   }
 });
+
 ipcMain.on("loadAboutView", () => {
   if (mainWindow) {
     mainWindow.loadFile("app/views/about.html");
@@ -50,8 +51,6 @@ ipcMain.on("loadAboutView", () => {
     console.error("Main window is not available.");
   }
 });
-
-app.on("ready", createWindow);
 
 ipcMain.on("loadPlusView", () => {
   if (mainWindow) {

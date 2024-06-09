@@ -37,21 +37,33 @@ body {
 }
 
 .passiroo {
-  grid-area: 1 / 1 / 2 / 2;
-  height: 60px;
-  background-image: linear-gradient(90deg, #00E8FC 0%, #F9C846 31%, #F96E46 86%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px 20px 0 0;
-  align-self: end;
-  width: 80%;
-  margin-left: 0; 
-  z-index: 40;
+	grid-area: 1 / 1 / 2 / 2;
+	height: 60px;
+	background-image: linear-gradient(90deg, #00e8fc 0%, #f9c846 31%, #f96e46 86%);
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-self: end;
+
+	border-radius: 20px 20px 0 0;
+	width: 80%;
+	margin-left: 0;
+	z-index: 40;
+
+  -webkit-app-region: drag;
 }
 
 .passiroo h1 {
   font-size: 1.8rem;
+  user-select: none;
+}
+
+.svg-large {
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1;
+	filter: url(#dropShadowLarge);
 }
 
 .plus {
@@ -88,6 +100,7 @@ body {
   justify-content: center !important;
   align-items: center !important;
   font-size: 1.5rem !important;
+  user-select: none !important;
 }
 
 .about {
@@ -124,10 +137,6 @@ body {
   background: rgb(52, 51, 48, 75%);
 }
 
-.invalid-feedback {
-  height: 
-}
-
 button {
   padding: 5px;
   width: 60%;
@@ -156,9 +165,9 @@ button {
 }
 
 .search {
-  animation-delay: 0.4s; /* Starts one second after page load */
+  animation-delay: 0.4s;
 }
 
 .about {
-  animation-delay: 0.8s; /* Starts 1.5 seconds after page load */
+  animation-delay: 0.8s;
 }
