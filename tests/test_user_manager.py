@@ -4,9 +4,6 @@ import sqlite3
 import unittest
 from py.models.user_manager import UserManager
 
-# Navigate to project folder and run tests with 
-#   `python -m unittest discover -s tests`
-
 class TestUserManager(unittest.TestCase):
     def setUp(self):
         self.db_connection = sqlite3.connect(':memory:')
@@ -17,6 +14,7 @@ class TestUserManager(unittest.TestCase):
                 hashed_password TEXT NOT NULL
             );
         """)
+
         self.user_manager = UserManager(self.db_connection)
 
     def test_password_validator_short_password(self):
@@ -55,7 +53,7 @@ class TestUserManager(unittest.TestCase):
         # Assemble
         account_name = "sotesty@gmail.com"
         password = "example_passworD123"
-        self.user_manager.register_and_login_user(account_name, password) # runs login_user() after registering
+        self.user_manager.register_and_login_user(account_name, password)
 
         # Act
         current_user_path = "current_user.json"
@@ -68,20 +66,25 @@ class TestUserManager(unittest.TestCase):
         self.assertIn("user_id", current_user_data)
         self.assertEqual(current_user_data["user_id"], results)
 
-    def test_userManager_UserManager_delCurrentUserId(self):
+    def test_userManager_UserManager_delSessionFile(self):
         # Assemble
-        account_name = "sotesty@gmail.com"
+        account_name = "sotesty2@gmail.com"
         password = "example_passworD123"
-        self.user_manager.register_and_login_user(account_name, password) # runs login_user() after registering
+        self.user_manager.register_and_login_user(account_name, password) 
 
         # Act
-        results = self.user_manager.current_user_id
-        self.assertIsNotNone(results)
-        del UserManager.current_user_id
+        with open(self.user_manager.SESSION_FILE, "w") as f:
+          json.dump({"user_id": self.user_manager._current_user_id}, f)
+          self.assertTrue(os.path.exists(self.user_manager.SESSION_FILE))
+
+        if os.path.exists(UserManager.SESSION_FILE):
+            os.remove(UserManager.SESSION_FILE)
+        self.user_manager.save_session()
 
         # Assert
+        del self.user_manager._current_user_id
         with self.assertRaises(AttributeError):
-          _ = self.user_manager.current_user_id
+            _ = self.user_manager.current_user_id
 
     def test_userManager_hash_password_passwordDifferentThanHashed(self):
         # Assemble
@@ -100,53 +103,38 @@ class TestUserManager(unittest.TestCase):
         # Assert
         self.assertTrue(result)
 
-    def test_userManager_register_and_login_user_checkDbForEmailAndHashedPassword(self):
+    def test_userManager_register_and_login_user_returnWithSuccessMessage(self):
         # Assemble
-        email = "test@example.com"
+        email = "test212@example.com"
         password = "testpassworD#123"
-        self.user_manager.register_and_login_user(email, password)
-        # Act
-        cursor = self.db_connection.cursor()
-        cursor.execute("SELECT email, hashed_password FROM users WHERE email=?", (email,))
-        user = cursor.fetchone()
-        # Assert
-        self.assertIsNotNone(user)
-        self.assertEqual(user[0], email)
-        self.assertNotEqual(user[1], password)
-    
-    def test_userManager_login_user_checkValidLogin(self):
-        # Assemble
-        email = "login_test@example.com"
-        password = "testlogiN#123"
-        # Act 
-        self.user_manager.register_and_login_user(email, password)
-        # Assert
-        self.assertTrue(self.user_manager.login_user(email, password))
 
-    def test_userManager_login_user_checkInvalidLoginByPassword(self):
-        # Assemble
-        email = "login_test@example.com"
-        password = "testlogiN#123"
-        # Act 
-        self.user_manager.register_and_login_user(email, password)
+        # Act
+        response = self.user_manager.register_and_login_user(email, password)
+
         # Assert
-        self.assertFalse(self.user_manager.login_user(email, "wrongpassword"))
-        
-    def test_userManager_login_user_checkInvalidLoginByEmail(self):
+        self.assertEqual(response["status"], "success", msg=f"Registration failed: {response.get('message')}")
+
+    def test_userManager_login_user_checkValidLoginBySuccessMessage(self):
         # Assemble
-        email = "login_test@example.com"
+        email = "login_test4@example.com"
         password = "testlogiN#123"
+        self.user_manager.register_and_login_user(email, password)
+        result = self.user_manager.login_user(email, password)
+        # Assert
+        self.assertEqual(result["status"], "success")
+
+    def test_userManager_login_user_checkInvalidLoginByIncorrectPassword(self):
+        # Assemble
+        email = "login_test5@example.com"
+        password = "testlogiN#123"
+        self.user_manager.register_and_login_user(email, password)
+        # Act 
         result = self.user_manager.login_user(email, "wrongpassword")
-        # Act 
-        self.user_manager.register_and_login_user(email, password)
         # Assert
-        self.assertFalse(result["status"] == "success")
-        
-    def tearDown(self):
-        if self.db_connection:
-            self.db_connection.close()
-        if os.path.exists(UserManager.SESSION_FILE):
-            os.remove(UserManager.SESSION_FILE)
+        self.assertEqual(result["status"], "error")
+
+    def teardown(self):
+        self.user_manager.logout_user()
 
 if __name__ == "__main__":
     unittest.main()

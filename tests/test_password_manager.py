@@ -8,9 +8,8 @@ from py.models.password_manager import PasswordManager
 #   `python -m unittest discover -s tests`
 
 class TestPasswordManager(unittest.TestCase):
-  # unittest runs setUp() before each test
     def setUp(self):
-        self.db_connection = sqlite3.connect(':memory:')
+        self.db_connection = sqlite3.connect(":memory:")
         self.db_connection.execute("""
             CREATE TABLE saved_passwords (
                 password_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,7 +19,7 @@ class TestPasswordManager(unittest.TestCase):
                 encrypted_password TEXT NOT NULL
             );
         """)
-        key = Fernet.generate_key()
+        key = load_key()
         self.password_manager = PasswordManager(self.db_connection, key)
 
     def test_passwordManager_encrypt_passwordDifferentThanEncryption(self):
@@ -95,8 +94,8 @@ class TestPasswordManager(unittest.TestCase):
         self.assertEqual(len(site_entries), 1)
 
         decrypted_entry = site_entries[0]
-        decrypted_account_name = decrypted_entry['account_name']
-        decrypted_password = decrypted_entry['password']
+        decrypted_account_name = decrypted_entry["account_name"]
+        decrypted_password = decrypted_entry["password"]
 
         self.assertEqual(decrypted_account_name, new_account_name)
         self.assertEqual(decrypted_password, new_password)
@@ -132,8 +131,8 @@ class TestPasswordManager(unittest.TestCase):
         self.assertEqual(len(site_entries), 1)
 
         site_name = site_entries[0]
-        retrieved_account_name = site_name['account_name']
-        retrieved_password = site_name['password']
+        retrieved_account_name = site_name["account_name"]
+        retrieved_password = site_name["password"]
 
         self.assertEqual(retrieved_account_name, new_account_name)
         self.assertEqual(retrieved_password, new_password)
@@ -154,6 +153,10 @@ class TestPasswordManager(unittest.TestCase):
         # Assert
         self.assertEqual(results["accountName"], account_name)
         self.assertEqual(results["password"], password)
+    
+def load_key(filename="secret.key"):
+    with open(filename, "rb") as key_file:
+        return key_file.read()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

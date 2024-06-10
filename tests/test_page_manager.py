@@ -6,7 +6,6 @@ from py.models.page_manager import PageManager
 #   `python -m unittest discover -s tests`
 
 class TestPageManager(unittest.TestCase):
-  # unittest runs setUp() before each test
   def setUp(self):
       self.page_manager = PageManager()
 
