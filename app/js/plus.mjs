@@ -76,7 +76,7 @@ function showCustomAlert(message) {
   const modal = document.getElementById("customAlertModal");
   const messageElement = document.getElementById("customAlertMessage");
   const closeButton = document.getElementById("closeModalButton");
-
+  
   messageElement.textContent = message;
   modal.style.display = "block";
 

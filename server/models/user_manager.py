@@ -14,11 +14,11 @@ class UserManager(object):
         return cls._instance
   
     def __init__(self, db_connection):
-        if not hasattr(self, 'initialized'):  # Ensure init is only called once
+        if not hasattr(self, 'initialized'):
             self.db_connection = db_connection
             self._current_user_id = self.load_session()
             self.initialized = True
-            # print(f"UserManager initialized with user_id: {self._current_user_id}")
+
         
     @property
     def current_user_id(self):
@@ -32,7 +32,8 @@ class UserManager(object):
     @current_user_id.deleter
     def current_user_id(self):
         del self._current_user_id
-        self.save_session()
+        if os.path.exists(UserManager.SESSION_FILE):
+            os.remove(UserManager.SESSION_FILE)
 
     def save_session(self):
         with open(self.SESSION_FILE, 'w') as f:
@@ -64,7 +65,7 @@ class UserManager(object):
         if not re.search(r"[!@#&%^&._-]", password):
             raise ValueError("Password must contain at least one special character (!@#&%^&._-).")
 
-    def register_user(self, email, password):
+    def register_and_login_user(self, email, password):
         try:
             self.password_validator(password)
             hashed_password = self.hash_password(password)
@@ -75,6 +76,7 @@ class UserManager(object):
                 )
             return self.login_user(email, password)
         except Exception as e:
+            print(f"Error registering user: {e}")
             return {"status": "error", "message": str(e)}
 
     def login_user(self, email, provided_password):
@@ -86,7 +88,7 @@ class UserManager(object):
 
         user_id, stored_hashed_password = result
         if bcrypt.checkpw(provided_password.encode(), stored_hashed_password):
-            if (user_id):
+            if user_id:
                 self.current_user_id = user_id
                 return {"status": "success", "message": "User successfully logged in"}
             else:

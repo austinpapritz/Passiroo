@@ -12,5 +12,8 @@ Passiroo is a lightweight desktop password manager — backend rigorously built 
 ![Add new password page](/public/passiroo-about-design.png)
 
 To-dos:
-Fix tests
 Slide animation on main content
+Installation package
+Desktop icon
+Caching passwordObj at login
+Loading animation

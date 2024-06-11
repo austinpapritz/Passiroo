@@ -1,16 +1,16 @@
-from cryptography.fernet import Fernet
-import unittest
+import json
 import sqlite3
-from py.models.password_manager import PasswordManager
+import unittest
+from cryptography.fernet import Fernet
+from server.models.password_manager import PasswordManager
 
 # Navigate to project folder and run tests with 
 #   `python -m unittest discover -s tests`
 
 class TestPasswordManager(unittest.TestCase):
-  # unittest runs setUp() before each test
     def setUp(self):
-        self.connection = sqlite3.connect(':memory:')
-        self.connection.execute("""
+        self.db_connection = sqlite3.connect(":memory:")
+        self.db_connection.execute("""
             CREATE TABLE saved_passwords (
                 password_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
@@ -19,8 +19,8 @@ class TestPasswordManager(unittest.TestCase):
                 encrypted_password TEXT NOT NULL
             );
         """)
-        key = Fernet.generate_key()
-        self.password_manager = PasswordManager(self.connection, key)
+        key = load_key()
+        self.password_manager = PasswordManager(self.db_connection, key)
 
     def test_passwordManager_encrypt_passwordDifferentThanEncryption(self):
         # Assemble
@@ -48,7 +48,7 @@ class TestPasswordManager(unittest.TestCase):
         # Act
         self.password_manager.add_saved_password(user_id, site_name, account_name, password)
         # Assert
-        cursor = self.connection.cursor()
+        cursor = self.db_connection.cursor()
         cursor.execute("SELECT encrypted_site_name, encrypted_account_name, encrypted_password FROM saved_passwords WHERE user_id=?", 
                       (user_id,))
         result = cursor.fetchone()
@@ -63,35 +63,42 @@ class TestPasswordManager(unittest.TestCase):
         self.assertEqual(decrypted_fetched_account_name, account_name)
         self.assertEqual(decrypted_fetched_password, password)
     
-    def test_passwordManager_get_saved_passwords_by_user_id_savedDataMatchesFetchedData(self):
+    def test_password_manager_edit_saved_password_newDataMatchesFetchedData(self):
         # Assemble
-        user_id = 1 
-        site_name = "example1.com"
-        account_name = "user1@example.com"
-        password = "password123"
-        
-        user_id = 1 
-        site_name2 = "example2.com"
-        account_name2 = "user2@example.com"
-        password2 = "password2123"
+        user_id = 1
+        original_site_name = "example.com"
+        original_account_name = "user@example.com"
+        original_password = "password123"
+        new_site_name = "newexample.com"
+        new_account_name = "newuser@example.com"
+        new_password = "newpassword456"
 
         # Act
-        self.password_manager.add_saved_password(user_id, site_name, account_name, password)
-        self.password_manager.add_saved_password(user_id, site_name2, account_name2, password2)
-        retrieved_entries = self.password_manager.get_saved_passwords_by_user_id(user_id)
+        self.password_manager.add_saved_password(user_id, original_site_name, original_account_name, original_password)
+        cursor = self.db_connection.cursor()
+        cursor.execute("SELECT password_id FROM saved_passwords WHERE user_id=?", (user_id,))
+        password_entry = cursor.fetchone()
+        self.assertIsNotNone(password_entry)
+        password_id = password_entry[0]
+
+        # Edit the password, site name, and account name
+        self.password_manager.edit_saved_password(password_id, new_site_name, new_account_name, new_password)
 
         # Assert
-        self.assertEqual(len(retrieved_entries), 2)
+        retrieved_entries_json = self.password_manager.get_saved_passwords_by_user_id(user_id)
+        retrieved_entries = json.loads(retrieved_entries_json)
 
-        decrypted_site_name, decrypted_account_name, decrypted_password = retrieved_entries[0]
-        self.assertEqual(decrypted_site_name, site_name)
-        self.assertEqual(decrypted_account_name, account_name)
-        self.assertEqual(decrypted_password, password)
-        
-        decrypted_site_name2, decrypted_account_name2, decrypted_password2 = retrieved_entries[1]
-        self.assertEqual(decrypted_site_name2, site_name2)
-        self.assertEqual(decrypted_account_name2, account_name2)
-        self.assertEqual(decrypted_password2, password2)
+        # Check that we have exactly one site entry for the new site name
+        self.assertIn(new_site_name, retrieved_entries)
+        site_entries = retrieved_entries[new_site_name]
+        self.assertEqual(len(site_entries), 1)
+
+        decrypted_entry = site_entries[0]
+        decrypted_account_name = decrypted_entry["account_name"]
+        decrypted_password = decrypted_entry["password"]
+
+        self.assertEqual(decrypted_account_name, new_account_name)
+        self.assertEqual(decrypted_password, new_password)
 
     def test_password_manager_edit_saved_password_newDataMatchesFetchedData(self):
         # Assemble
@@ -105,7 +112,7 @@ class TestPasswordManager(unittest.TestCase):
 
         # Act
         self.password_manager.add_saved_password(user_id, original_site_name, original_account_name, original_password)
-        cursor = self.connection.cursor()
+        cursor = self.db_connection.cursor()
         cursor.execute("SELECT password_id FROM saved_passwords WHERE user_id=?", (user_id,))
         password_entry = cursor.fetchone()
         self.assertIsNotNone(password_entry)
@@ -115,12 +122,22 @@ class TestPasswordManager(unittest.TestCase):
         self.password_manager.edit_saved_password(password_id, new_site_name, new_account_name, new_password)
 
         # Assert
-        retrieved_entries = self.password_manager.get_saved_passwords_by_user_id(user_id)
-        self.assertEqual(len(retrieved_entries), 1)
-        decrypted_site_name, decrypted_account_name, decrypted_password = retrieved_entries[0]
-        self.assertEqual(decrypted_site_name, new_site_name)
-        self.assertEqual(decrypted_account_name, new_account_name)
-        self.assertEqual(decrypted_password, new_password)
+        retrieved_entries_json = self.password_manager.get_saved_passwords_by_user_id(user_id)
+        retrieved_entries = json.loads(retrieved_entries_json)
+
+        # Check that we have exactly one site entry for the new site name
+        self.assertIn(new_site_name, retrieved_entries)
+        site_entries = retrieved_entries[new_site_name]
+        self.assertEqual(len(site_entries), 1)
+
+        site_name = site_entries[0]
+        retrieved_account_name = site_name["account_name"]
+        retrieved_password = site_name["password"]
+
+        self.assertEqual(retrieved_account_name, new_account_name)
+        self.assertEqual(retrieved_password, new_password)
+
+
         
     def test_password_manager_get_accountName_and_password_by_site_name_fetchedDataMatchesSavedData(self):
         # Assemble
@@ -136,6 +153,10 @@ class TestPasswordManager(unittest.TestCase):
         # Assert
         self.assertEqual(results["accountName"], account_name)
         self.assertEqual(results["password"], password)
+    
+def load_key(filename="secret.key"):
+    with open(filename, "rb") as key_file:
+        return key_file.read()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
