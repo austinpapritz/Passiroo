@@ -20,24 +20,24 @@ def generate_and_save_key(filename="secret.key"):
 
 def load_key(filename="secret.key"):
     return open(filename, "rb").read()
+  
+if not os.path.exists('passiroo.db'):
+  create_database()
 
-# Establish a database connection
+if not os.path.exists('secret.key'):
+    generate_and_save_key()
+
 db_connection = sqlite3.connect('passiroo.db')
 
-# Create an instance of PasswordManager
 key = load_key()
 password_manager = PasswordManager(db_connection, key)
-
-# Create an instance of PageManager
 page_manager = PageManager()
-
-# Create an instance of UserManager
 user_manager = UserManager(db_connection)
 
-# Configure logging
 logging.basicConfig(filename='app.log', level=logging.DEBUG)
 
-create_database()
+if not os.path.exists('passiroo.db'):
+    create_database()
 
 def register_and_login_user(email, password):
     result = user_manager.register_and_login_user(email, password)
@@ -52,7 +52,6 @@ def login_user(email, password):
   
 def add_password(user_id, site_name, account_name, password):
     try:
-        # logging.debug(f"Password added for site_name: {site_name}, account_name: {account_name}, user_id: {user_id}, password: {password}")
         password_manager.add_saved_password(user_id, site_name, account_name, password)
         return json.dumps({"status": "success", "message": "Password successfully added"})
     except Exception as e:
@@ -60,7 +59,6 @@ def add_password(user_id, site_name, account_name, password):
       
 def edit_password(password_id, site_name, account_name, password):
     try:
-        # logging.debug(f"Password (id {password_id}), added for site_name: {site_name}, account_name: {account_name}, password: {password}")
         password_manager.edit_saved_password(password_id, site_name, account_name, password)
         return json.dumps({"status": "success", "message": "Password successfully edited"})
     except Exception as e:
@@ -68,7 +66,6 @@ def edit_password(password_id, site_name, account_name, password):
       
 def delete_password(password_id):
     try:
-        # logging.debug(f"Password (id {password_id})")
         password_manager.delete_saved_password(password_id)
         return json.dumps({"status": "success", "message": "Password successfully deleted"})
     except Exception as e:
@@ -94,12 +91,11 @@ def fetch_user_id():
 def fetch_passwords(user_id):
     try:
         passwords = password_manager.get_saved_passwords_by_user_id(user_id)
-        # logging.debug(f"Fetched Passwordss: {passwords}")  # Log to file
         if not passwords:
             passwords = []
         return json.dumps({"status": "success", "data": passwords})
     except Exception as e:
-        logging.error(f"Error fetching passwords: {str(e)}")  # Log to file
+        logging.error(f"Error fetching passwords: {str(e)}") 
         return json.dumps({"status": "error", "message": str(e)})
 
 def logout_user():

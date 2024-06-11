@@ -1,16 +1,44 @@
 {
   "name": "Passiroo",
   "version": "1.0.0",
+  "description": "Passiroo - A password management app",
   "type": "module",
-  "main": "app/js/main.mjs",
+  "main": "app/main.mjs",
+  "build": {
+    "appId": "app.netlify.papritz.passiroo",
+    "productName": "Passiroo",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/Windows/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/macOS/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/Linux/icon.png"
+    }
+  },
+  "files": [
+    "app/**/*",
+    "server/**/*",
+    "public/**/*",
+    "node_modules/**/*",
+    "package.json"
+  ],
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "python -m unittest discover -s server/tests",
+    "build": "electron-builder"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Austin Papritz",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^30.0.6"
+    "electron": "^30.0.6",
+    "electron-builder": "^24.13.3"
   }
 }
