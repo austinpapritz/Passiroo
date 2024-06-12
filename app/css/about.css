@@ -52,8 +52,7 @@ body {
 
 .svg-large {
 	fill: none;
-	stroke: currentColor;
-	stroke-width: 1;
+	stroke-width: 1.1;
 	filter: url(#dropShadowLarge);
 }
 
