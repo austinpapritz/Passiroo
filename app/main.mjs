@@ -200,10 +200,10 @@ ipcMain.handle("fetch-user-id", async (event) => {
   }
 });
 
-// Fetch passwords for dropdown.
-ipcMain.handle("fetch-passwords", async (event, user_id) => {
+// Fetch password data to populate dropdown and labels on search page.
+ipcMain.handle("fetch-saved-sites-accounts-and-passwords", async (event, user_id) => {
   const pythonScriptPath = path.join(__dirname, "../server/main.py");
-  const pyProcess = spawn("python", [pythonScriptPath, "fetch_passwords", user_id]);
+  const pyProcess = spawn("python", [pythonScriptPath, "fetch_sites_accounts_and_passwords", user_id]);
 
   let data = "";
   let error = "";

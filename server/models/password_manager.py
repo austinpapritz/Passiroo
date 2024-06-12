@@ -25,7 +25,7 @@ class PasswordManager:
             logging.error(f"Error adding password: {str(e)}")
             return {"status": "error", "message": str(e)}
 
-    def get_saved_passwords_by_user_id(self, user_id):
+    def get_saved_sites_accounts_and_passwords_by_user_id(self, user_id):
         cursor = self.db_connection.cursor()
         cursor.execute("SELECT encrypted_site_name, encrypted_account_name, encrypted_password, password_id FROM saved_passwords WHERE user_id=?", (user_id,))
         encrypted_entries = cursor.fetchall()

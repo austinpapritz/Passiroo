@@ -42,12 +42,12 @@ searchPage.addEventListener("click", () => {
 //     },
 //   ]
 // }
-async function fetchPasswordData() {
+async function fetchSavedSiteNamesAccountNamesAndPasswords() {
   if (API) {
     try {
       const user_id = await fetchUserId();
       if (user_id) {
-        let response = await API.fetchPasswords(user_id);
+        let response = await API.fetchSavedSitesAccountsAndPasswords(user_id);
 
         if (typeof response.data === "string") {
           response = JSON.parse(response.data);
@@ -69,11 +69,10 @@ async function fetchPasswordData() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  await fetchPasswordData();
+  await fetchSavedSiteNamesAccountNamesAndPasswords();
   document.getElementById("siteSearch").focus();
 });
 
-// Populating site name search / dropdown list.
 function populateSiteList(passwordObjs) {
   const siteUL = document.getElementById("site-ul");
   const passwordLabel = document.getElementById("passwordLabel");

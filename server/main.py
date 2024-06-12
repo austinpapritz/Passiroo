@@ -88,9 +88,9 @@ def fetch_user_id():
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
 
-def fetch_passwords(user_id):
+def fetch_sites_accounts_and_passwords(user_id):
     try:
-        passwords = password_manager.get_saved_passwords_by_user_id(user_id)
+        passwords = password_manager.get_saved_sites_accounts_and_passwords_by_user_id(user_id)
         if not passwords:
             passwords = []
         return json.dumps({"status": "success", "data": passwords})
@@ -139,8 +139,8 @@ if __name__ == '__main__':
             print(delete_password(password_id))
         elif action == 'fetch_user_id':
             print(fetch_user_id())
-        elif action == 'fetch_passwords':
+        elif action == 'fetch_sites_accounts_and_passwords':
             user_id = sys.argv[2]
-            print(fetch_passwords(user_id))
+            print(fetch_sites_accounts_and_passwords(user_id))
     except Exception as e:
         print(json.dumps({"status": "error", "message": str(e)}))

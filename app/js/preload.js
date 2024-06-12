@@ -19,14 +19,14 @@ contextBridge.exposeInMainWorld("electronAPI", {
   deletePassword: async (password_id) => await ipcRenderer.invoke("delete-password", password_id),
 
   loadPlusView: () => ipcRenderer.send("loadPlusView"),
-  loadAboutView: () => ipcRenderer.send("loadAboutView"),
   loadSearchView: () => ipcRenderer.send("loadSearchView"),
+  loadAboutView: () => ipcRenderer.send("loadAboutView"),
   
   generateRandomPassword: (data) => ipcRenderer.send("generateRandomPassword", data),
   onGenerateRandomPasswordSuccess: (callback) => ipcRenderer.on("generate-random-password-success", callback),
   onGenerateRandomPasswordFailure: (callback) => ipcRenderer.on("generate-random-password-failure", callback),
 
   fetchUserId: () => ipcRenderer.invoke("fetch-user-id"),
-  fetchPasswords: (user_id) => ipcRenderer.invoke("fetch-passwords", user_id)
+  fetchSavedSitesAccountsAndPasswords: (user_id) => ipcRenderer.invoke("fetch-saved-sites-accounts-and-passwords", user_id)
 })
 
