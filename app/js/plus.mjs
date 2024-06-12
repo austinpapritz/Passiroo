@@ -92,7 +92,7 @@ function showCustomAlert(message) {
   };
 }
 
-document.querySelectorAll(".toggle-password").forEach(button => {
+document.querySelectorAll(".toggle-password-visibility").forEach(button => {
   button.addEventListener("click", () => {
     const input = button.closest('.input-group').querySelector('input');
     const icon = button.firstElementChild;
