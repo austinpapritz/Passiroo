@@ -123,9 +123,9 @@ ipcMain.on("login", (event, userData) => {
 });
 
 // Add new saved password.
-ipcMain.on("addPassword", (event, userData) => {
+ipcMain.on("add-site-account-and-password", (event, userData) => {
   const pythonScriptPath = path.join(__dirname, "../server/main.py");
-  const pyProcess = spawn("python", [pythonScriptPath, "add_password", userData.user_id, userData.site_name, userData.account_name, userData.password]);
+  const pyProcess = spawn("python", [pythonScriptPath, "add_site_account_and_password", userData.user_id, userData.site_name, userData.account_name, userData.password]);
 
   let data = "";
   let error = "";
@@ -140,9 +140,9 @@ ipcMain.on("addPassword", (event, userData) => {
 
   pyProcess.on("close", (code) => {
     if (code === 0) {
-      event.reply("add-password-success", "Password added successfully");
+      event.reply("add-site-account-and-password-success", "Password added successfully");
     } else {
-      event.reply("add-password-failure", "Failed to add password");
+      event.reply("add-site-account-and-password-failure", "Failed to add password");
     }
   });
 });

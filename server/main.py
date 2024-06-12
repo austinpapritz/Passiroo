@@ -50,9 +50,9 @@ def login_user(email, password):
     else:
         return json.dumps({"status": "error", "message": "Login failed"})
   
-def add_password(user_id, site_name, account_name, password):
+def add_site_account_and_password(user_id, site_name, account_name, password):
     try:
-        password_manager.add_saved_password(user_id, site_name, account_name, password)
+        password_manager.add_site_account_and_password_to_database(user_id, site_name, account_name, password)
         return json.dumps({"status": "success", "message": "Password successfully added"})
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
@@ -118,12 +118,12 @@ if __name__ == '__main__':
             print(login_user(email, password))
         elif action == 'logout_user':
             print(logout_user())
-        elif action == 'add_password':
+        elif action == 'add_site_account_and_password':
             user_id = sys.argv[2]
             site_name = sys.argv[3]
             account_name = sys.argv[4]
             password = sys.argv[5]
-            print(add_password(user_id, site_name, account_name, password))
+            print(add_site_account_and_password(user_id, site_name, account_name, password))
         elif action == 'generate_random_password':
             special_characters = sys.argv[2]
             password_length = sys.argv[3]

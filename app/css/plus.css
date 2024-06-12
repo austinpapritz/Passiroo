@@ -240,7 +240,7 @@ body {
   gap: 0px !important;
 }
 
-.spec-char-list .selected {
+.selected-char-for-generate-random-password {
   background: rgb(234, 182, 46, 0.75)
 }
 

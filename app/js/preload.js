@@ -10,9 +10,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   onLoginSuccess: (callback) => ipcRenderer.on("login-success", callback),
   onLoginFailure: (callback) => ipcRenderer.on("login-failure", callback),
 
-  addPassword: (data) => ipcRenderer.send("addPassword", data),
-  onAddPasswordSuccess: (callback) => ipcRenderer.on("add-password-success", callback),
-  onAddPasswordFailure: (callback) => ipcRenderer.on("add-password-failure", callback),
+  addSiteAccountAndPassword: (data) => ipcRenderer.send("add-site-account-and-password", data),
+  onAddSiteAccountAndPasswordSuccess: (callback) => ipcRenderer.on("add-site-account-and-password-success", callback),
+  onAddSiteAccountAndPasswordFailure: (callback) => ipcRenderer.on("add-site-account-and-password-failure", callback),
 
   editPassword: async (password_id, site_name, account_name, password) => await ipcRenderer.invoke("edit-password", { password_id, site_name, account_name, password }),
 
