@@ -124,7 +124,7 @@ document.getElementById("generateRandomPasswordForm").addEventListener("submit",
 
 function selectedSpecialCharacters() {
   return Array.from(document.querySelectorAll(".spec-char-li"))
-    .filter(li => li.classList.contains("selected"))
+    .filter(li => li.classList.contains("selected-char-for-generate-random-password"))
     .map(li => li.getAttribute("value"))
     .join("");
 }

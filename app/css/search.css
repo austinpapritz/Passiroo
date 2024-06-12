@@ -300,6 +300,7 @@ body {
 	color: rgb(38, 168, 108);
 	border: solid rgb(38, 168, 108) 15px;
 	border-radius: 150px;
+  cursor: pointer;
 }
 
 .trash-svg {
@@ -308,13 +309,14 @@ body {
 	color: #ff4e5c;
 	border: solid #ff4e5c 15px;
 	border-radius: 150px;
+  cursor: pointer;
 }
 
 .hidden {
   display: none !important;
 }
 
-/* Animation for clicking copy-icon */
+/* Check-emoji Animation for clicking copy-icon */
 .check-emoji {
   color: rgb(38, 168, 108);
   position: absolute;
