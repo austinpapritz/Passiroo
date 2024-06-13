@@ -25,14 +25,14 @@
   },
   "files": [
     "app/**/*",
-    "server/**/*",
     "public/**/*",
     "node_modules/**/*",
+    "package-lock.json",
     "package.json"
   ],
   "scripts": {
     "start": "electron .",
-    "test": "python -m unittest discover -s server/tests",
+    "test": "python -m unittest discover -s backend/tests",
     "build": "electron-builder"
   },
   "author": "Austin Papritz",

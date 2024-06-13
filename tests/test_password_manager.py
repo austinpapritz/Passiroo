@@ -2,7 +2,7 @@ import json
 import sqlite3
 import unittest
 from cryptography.fernet import Fernet
-from server.models.password_manager import PasswordManager
+from app.backend.models.password_manager import PasswordManager
 
 # Navigate to project folder and run tests with 
 #   `python -m unittest discover -s tests`

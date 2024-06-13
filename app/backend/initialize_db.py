@@ -1,7 +1,7 @@
 import sqlite3
 
-def create_database():
-    conn = sqlite3.connect("passiroo.db")
+def create_database(db_path):
+    conn = sqlite3.connect(db_path)
 
     with conn:
         conn.execute("""
@@ -24,5 +24,3 @@ def create_database():
 
     # Close the connection
     conn.close()
-
-create_database()
