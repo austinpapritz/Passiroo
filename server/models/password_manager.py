@@ -10,7 +10,7 @@ class PasswordManager:
         self.db_connection = db_connection
         self.fernet = Fernet(encryption_key)
 
-    def add_saved_password(self, user_id, site_name, account_name, password):
+    def add_site_account_and_password_to_database(self, user_id, site_name, account_name, password):
         try:
             encrypted_site_name = self.encrypt(site_name)
             encrypted_account_name = self.encrypt(account_name)
@@ -25,7 +25,7 @@ class PasswordManager:
             logging.error(f"Error adding password: {str(e)}")
             return {"status": "error", "message": str(e)}
 
-    def get_saved_passwords_by_user_id(self, user_id):
+    def get_saved_sites_accounts_and_passwords_by_user_id(self, user_id):
         cursor = self.db_connection.cursor()
         cursor.execute("SELECT encrypted_site_name, encrypted_account_name, encrypted_password, password_id FROM saved_passwords WHERE user_id=?", (user_id,))
         encrypted_entries = cursor.fetchall()

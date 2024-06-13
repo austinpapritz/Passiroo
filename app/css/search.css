@@ -46,14 +46,12 @@ body {
 }
 
 .passiroo-logo {
-  height: 100%;
-  width: 100%;
+  height: 50%;
 }
 
 .svg-large {
 	fill: none;
-	stroke: currentColor;
-	stroke-width: 1;
+	stroke-width: 1.1;
 	filter: url(#dropShadowLarge);
 }
 
@@ -234,7 +232,7 @@ body {
 	color: #fff;
 	width: 80%;
 	height: 2em;
-	padding: 0 10px;
+	padding: 0 15px;
 	border-radius: 20px;
 	background: rgb(52, 51, 48, 75%);
   z-index: 30;
@@ -302,6 +300,7 @@ body {
 	color: rgb(38, 168, 108);
 	border: solid rgb(38, 168, 108) 15px;
 	border-radius: 150px;
+  cursor: pointer;
 }
 
 .trash-svg {
@@ -310,13 +309,14 @@ body {
 	color: #ff4e5c;
 	border: solid #ff4e5c 15px;
 	border-radius: 150px;
+  cursor: pointer;
 }
 
 .hidden {
   display: none !important;
 }
 
-/* Animation for clicking copy-icon */
+/* Check-emoji Animation for clicking copy-icon */
 .check-emoji {
   color: rgb(38, 168, 108);
   position: absolute;

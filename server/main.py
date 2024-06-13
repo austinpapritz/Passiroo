@@ -50,9 +50,9 @@ def login_user(email, password):
     else:
         return json.dumps({"status": "error", "message": "Login failed"})
   
-def add_password(user_id, site_name, account_name, password):
+def add_site_account_and_password(user_id, site_name, account_name, password):
     try:
-        password_manager.add_saved_password(user_id, site_name, account_name, password)
+        password_manager.add_site_account_and_password_to_database(user_id, site_name, account_name, password)
         return json.dumps({"status": "success", "message": "Password successfully added"})
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
@@ -88,9 +88,9 @@ def fetch_user_id():
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
 
-def fetch_passwords(user_id):
+def fetch_sites_accounts_and_passwords(user_id):
     try:
-        passwords = password_manager.get_saved_passwords_by_user_id(user_id)
+        passwords = password_manager.get_saved_sites_accounts_and_passwords_by_user_id(user_id)
         if not passwords:
             passwords = []
         return json.dumps({"status": "success", "data": passwords})
@@ -118,12 +118,12 @@ if __name__ == '__main__':
             print(login_user(email, password))
         elif action == 'logout_user':
             print(logout_user())
-        elif action == 'add_password':
+        elif action == 'add_site_account_and_password':
             user_id = sys.argv[2]
             site_name = sys.argv[3]
             account_name = sys.argv[4]
             password = sys.argv[5]
-            print(add_password(user_id, site_name, account_name, password))
+            print(add_site_account_and_password(user_id, site_name, account_name, password))
         elif action == 'generate_random_password':
             special_characters = sys.argv[2]
             password_length = sys.argv[3]
@@ -139,8 +139,8 @@ if __name__ == '__main__':
             print(delete_password(password_id))
         elif action == 'fetch_user_id':
             print(fetch_user_id())
-        elif action == 'fetch_passwords':
+        elif action == 'fetch_sites_accounts_and_passwords':
             user_id = sys.argv[2]
-            print(fetch_passwords(user_id))
+            print(fetch_sites_accounts_and_passwords(user_id))
     except Exception as e:
         print(json.dumps({"status": "error", "message": str(e)}))

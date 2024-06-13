@@ -22,9 +22,9 @@
         <defs>
           <filter id="dropShadowLarge" x="0" y="0">
             <feDropShadow 
-              dx="5" 
+              dx="4" 
               dy="4" 
-              stdDeviation="3" 
+              stdDeviation="2" 
               flood-color="rgba(0, 0, 0, 0.4)" />
           </filter>
         </defs>
@@ -64,7 +64,7 @@
     </li>
     <div class="top">
       <h3>New Password</h3>
-      <form id="addNewPasswordToDatabaseForm">
+      <form id="addNewSiteAccountAndPasswordToDatabaseForm">
         <!-- website -->
         <div class="input-group mb-3">
           <input 
@@ -92,7 +92,7 @@
             placeholder="password" 
             required />
           <div class="input-group-append">
-            <button id="eyeButton" class="btn btn-outline-secondary toggle-password eye-button" type="button">
+            <button id="eyeButton" class="btn btn-outline-secondary toggle-password-visibility eye-button" type="button">
               <i class="far fa-eye-slash"></i>
             </button>
           </div>
@@ -106,7 +106,7 @@
             placeholder="confirm password" 
             required />
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary toggle-password eye-button" type="button">
+            <button class="btn btn-outline-secondary toggle-password-visibility eye-button" type="button">
               <i class="far fa-eye-slash"></i>
             </button>
           </div>

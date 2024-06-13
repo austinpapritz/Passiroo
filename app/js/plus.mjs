@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // Handle form submission for adding a password.
-document.getElementById("addNewPasswordToDatabaseForm").addEventListener("submit", async (event) => {
+document.getElementById("addNewSiteAccountAndPasswordToDatabaseForm").addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const site_name = document.getElementById("websiteInput").value;
@@ -47,7 +47,7 @@ document.getElementById("addNewPasswordToDatabaseForm").addEventListener("submit
   if (API) {
     try {
       const user_id = await fetchUserId();
-      await API.addPassword({user_id, site_name, account_name, password});
+      await API.addSiteAccountAndPassword({user_id, site_name, account_name, password});
       
       // Manually reset each form field
       document.getElementById("websiteInput").value = '';
@@ -92,7 +92,7 @@ function showCustomAlert(message) {
   };
 }
 
-document.querySelectorAll(".toggle-password").forEach(button => {
+document.querySelectorAll(".toggle-password-visibility").forEach(button => {
   button.addEventListener("click", () => {
     const input = button.closest('.input-group').querySelector('input');
     const icon = button.firstElementChild;
@@ -108,10 +108,9 @@ document.querySelectorAll(".toggle-password").forEach(button => {
   });
 });
 
-// Highlight selected special characters for generating password.
 document.querySelectorAll(".spec-char-li").forEach(li => {
   li.addEventListener("click", () => {
-    li.classList.toggle("selected");
+    li.classList.toggle("selected-char-for-generate-random-password");
   });
 });
 
@@ -125,7 +124,7 @@ document.getElementById("generateRandomPasswordForm").addEventListener("submit",
 
 function selectedSpecialCharacters() {
   return Array.from(document.querySelectorAll(".spec-char-li"))
-    .filter(li => li.classList.contains("selected"))
+    .filter(li => li.classList.contains("selected-char-for-generate-random-password"))
     .map(li => li.getAttribute("value"))
     .join("");
 }
@@ -142,11 +141,11 @@ listenForBackendResponse()
 
 function listenForBackendResponse() {
   if (API) {
-    API.onAddPasswordSuccess((event, message) => {
+    API.onAddSiteAccountAndPasswordSuccess((event, message) => {
       showCustomAlert("Password added successfully!");
     });
   
-    API.onAddPasswordFailure((event, message) => {
+    API.onAddSiteAccountAndPasswordFailure((event, message) => {
       showCustomAlert(`Failed to add password: ${message}`);
     });
   
