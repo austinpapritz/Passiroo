@@ -10,6 +10,18 @@ from models.user_manager import UserManager
 
 from initialize_db import create_database
 
+logging.basicConfig(filename="python-app.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
+
+def get_app_path():
+    if getattr(sys, "frozen", False):  # If running as a compiled executable
+        return os.path.dirname(sys.executable)
+    else:
+        return os.path.dirname(os.path.abspath(__file__))
+
+app_path = get_app_path()
+db_path = os.path.join(app_path, "passiroo.db")
+key_path = os.path.join(app_path, "secret.key")
+
 def save_key(key, filename="secret.key"):
     with open(filename, "wb") as key_file:
         key_file.write(key)
@@ -20,28 +32,25 @@ def generate_and_save_key(filename="secret.key"):
 
 def load_key(filename="secret.key"):
     return open(filename, "rb").read()
-  
-if not os.path.exists('passiroo.db'):
-  create_database()
 
-if not os.path.exists('secret.key'):
-    generate_and_save_key()
+if not os.path.exists(db_path):
+    create_database(db_path)
 
-db_connection = sqlite3.connect('passiroo.db')
+if not os.path.exists(key_path):
+    generate_and_save_key(key_path)
 
-key = load_key()
+db_connection = sqlite3.connect(db_path)
+key = load_key(key_path)
 password_manager = PasswordManager(db_connection, key)
 page_manager = PageManager()
-user_manager = UserManager(db_connection)
-
-logging.basicConfig(filename='app.log', level=logging.DEBUG)
-
-if not os.path.exists('passiroo.db'):
-    create_database()
+user_manager = UserManager(db_connection, app_path)
 
 def register_and_login_user(email, password):
     result = user_manager.register_and_login_user(email, password)
-    return json.dumps(result)
+    if result:
+        return json.dumps(result)
+    else:
+        return json.dumps({"status": "error", "message": "Login failed"})
 
 def login_user(email, password):
     result = user_manager.login_user(email, password)
@@ -78,7 +87,6 @@ def generate_random_password(special_characters, password_length):
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})  
 
-
 def fetch_user_id():
     try:
         user_id = user_manager.current_user_id
@@ -105,41 +113,41 @@ def logout_user():
     except Exception as e:
         return json.dumps({"status": "error", "message": str(e)})
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         action = sys.argv[1]
-        if action == 'register_and_login_user':
+        if action == "register_and_login_user":
             email = sys.argv[2]
             password = sys.argv[3]
             print(register_and_login_user(email, password))
-        elif action == 'login_user':
+        elif action == "login_user":
             email = sys.argv[2]
             password = sys.argv[3]
             print(login_user(email, password))
-        elif action == 'logout_user':
+        elif action == "logout_user":
             print(logout_user())
-        elif action == 'add_site_account_and_password':
+        elif action == "add_site_account_and_password":
             user_id = sys.argv[2]
             site_name = sys.argv[3]
             account_name = sys.argv[4]
             password = sys.argv[5]
             print(add_site_account_and_password(user_id, site_name, account_name, password))
-        elif action == 'generate_random_password':
+        elif action == "generate_random_password":
             special_characters = sys.argv[2]
             password_length = sys.argv[3]
             print(generate_random_password(special_characters, password_length))
-        elif action == 'edit_password':
+        elif action == "edit_password":
             password_id = sys.argv[2]
             site_name = sys.argv[3]
             account_name = sys.argv[4]
             password = sys.argv[5]
             print(edit_password(password_id, site_name, account_name, password ))
-        elif action == 'delete_password':
+        elif action == "delete_password":
             password_id = sys.argv[2]
             print(delete_password(password_id))
-        elif action == 'fetch_user_id':
+        elif action == "fetch_user_id":
             print(fetch_user_id())
-        elif action == 'fetch_sites_accounts_and_passwords':
+        elif action == "fetch_sites_accounts_and_passwords":
             user_id = sys.argv[2]
             print(fetch_sites_accounts_and_passwords(user_id))
     except Exception as e:

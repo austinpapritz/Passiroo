@@ -2,7 +2,7 @@ import json
 import os
 import sqlite3
 import unittest
-from server.models.user_manager import UserManager
+from app.backend.models.user_manager import UserManager
 
 class TestUserManager(unittest.TestCase):
     def setUp(self):

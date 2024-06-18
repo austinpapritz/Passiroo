@@ -6,20 +6,20 @@ import re
 
 class UserManager(object):
     _instance = None
-    SESSION_FILE = 'current_user.json'
+    SESSION_FILE = "current_user.json"
     
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super(UserManager, cls).__new__(cls)
         return cls._instance
   
-    def __init__(self, db_connection):
-        if not hasattr(self, 'initialized'):
+    def __init__(self, db_connection, app_path):
+        if not hasattr(self, "initialized"):
             self.db_connection = db_connection
+            self.session_file_path = os.path.join(app_path, self.SESSION_FILE)
             self._current_user_id = self.load_session()
             self.initialized = True
 
-        
     @property
     def current_user_id(self):
         return self._current_user_id
@@ -32,18 +32,18 @@ class UserManager(object):
     @current_user_id.deleter
     def current_user_id(self):
         del self._current_user_id
-        if os.path.exists(UserManager.SESSION_FILE):
-            os.remove(UserManager.SESSION_FILE)
+        if os.path.exists(self.session_file_path):
+            os.remove(self.session_file_path)
 
     def save_session(self):
-        with open(self.SESSION_FILE, 'w') as f:
-            json.dump({'user_id': self._current_user_id}, f)
+        with open(self.session_file_path, "w") as f:
+            json.dump({"user_id": self._current_user_id}, f)
 
     def load_session(self):
-        if os.path.exists(self.SESSION_FILE):
-            with open(self.SESSION_FILE, 'r') as f:
+        if os.path.exists(self.session_file_path):
+            with open(self.session_file_path, "r") as f:
                 data = json.load(f)
-                return data.get('user_id', None)
+                return data.get("user_id", None)
         return None
 
     def hash_password(self, password):

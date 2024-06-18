@@ -1,4 +1,3 @@
-// This file makes it so that only necessary Node.js functions are exposed
 const {contextBridge, ipcRenderer} = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {

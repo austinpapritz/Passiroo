@@ -1,9 +1,8 @@
-import { ipcMain, app, BrowserWindow } from "electron";
 import { spawn } from "child_process";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Define __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -28,12 +27,12 @@ function createWindow() {
 
 app.on("ready", createWindow);
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
-app.on('activate', () => {
+app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
@@ -71,9 +70,8 @@ ipcMain.on("loadPlusView", () => {
   }
 });
 
-// New user registration.
 ipcMain.on("register", (event, userData) => {
-  const pythonScriptPath = path.join(__dirname, "../server/main.py");
+  const pythonScriptPath = path.join(__dirname, "backend/main.py");
   const pyProcess = spawn("python", [pythonScriptPath, "register_and_login_user", userData.email, userData.password]);
 
   pyProcess.stdout.on("data", (data) => {
@@ -94,9 +92,8 @@ ipcMain.on("register", (event, userData) => {
   });
 });
 
-// User login.
 ipcMain.on("login", (event, userData) => {
-  const pythonScriptPath = path.join(__dirname, "../server/main.py");
+  const pythonScriptPath = path.join(__dirname, "backend/main.py");
   const pyProcess = spawn("python", [pythonScriptPath, "login_user", userData.email, userData.password]);
 
   pyProcess.stdout.on("data", (data) => {
@@ -122,9 +119,8 @@ ipcMain.on("login", (event, userData) => {
   });
 });
 
-// Add new saved password.
 ipcMain.on("add-site-account-and-password", (event, userData) => {
-  const pythonScriptPath = path.join(__dirname, "../server/main.py");
+  const pythonScriptPath = path.join(__dirname, "backend/main.py");
   const pyProcess = spawn("python", [pythonScriptPath, "add_site_account_and_password", userData.user_id, userData.site_name, userData.account_name, userData.password]);
 
   let data = "";
@@ -147,9 +143,8 @@ ipcMain.on("add-site-account-and-password", (event, userData) => {
   });
 });
 
-// Generate random password.
 ipcMain.on("generateRandomPassword", (event, data) => {
-  const pythonScriptPath = path.join(__dirname, "../server/main.py");
+  const pythonScriptPath = path.join(__dirname, "backend/main.py");
   const pyProcess = spawn("python", [pythonScriptPath, "generate_random_password", data.specialCharacters, data.passwordLength]);
 
   pyProcess.stderr.on("data", (data) => {
@@ -166,9 +161,8 @@ ipcMain.on("generateRandomPassword", (event, data) => {
   });
 });
 
-// Fetch user-id.
 ipcMain.handle("fetch-user-id", async (event) => {
-  const pythonScriptPath = path.join(__dirname, "../server/main.py");
+  const pythonScriptPath = path.join(__dirname, "backend/main.py");
   const pyProcess = spawn("python", [pythonScriptPath, "fetch_user_id"]);
 
   let data = "";
@@ -200,9 +194,8 @@ ipcMain.handle("fetch-user-id", async (event) => {
   }
 });
 
-// Fetch password data to populate dropdown and labels on search page.
 ipcMain.handle("fetch-saved-sites-accounts-and-passwords", async (event, user_id) => {
-  const pythonScriptPath = path.join(__dirname, "../server/main.py");
+  const pythonScriptPath = path.join(__dirname, "backend/main.py");
   const pyProcess = spawn("python", [pythonScriptPath, "fetch_sites_accounts_and_passwords", user_id]);
 
   let data = "";
@@ -234,9 +227,8 @@ ipcMain.handle("fetch-saved-sites-accounts-and-passwords", async (event, user_id
   }
 });
 
-// Logout.
 ipcMain.on("logout", (event) => {
-  const pythonScriptPath = path.join(__dirname, "../server/main.py");
+  const pythonScriptPath = path.join(__dirname, "backend/main.py");
   const pyProcess = spawn("python", [pythonScriptPath, "logout_user"]);
 
   pyProcess.stderr.on("data", (data) => {
@@ -253,13 +245,12 @@ ipcMain.on("logout", (event) => {
 });
 
 app.on("before-quit", () => {
-  const pythonScriptPath = path.join(__dirname, "../server/main.py");
+  const pythonScriptPath = path.join(__dirname, "backend/main.py");
   spawn("python", [pythonScriptPath, "logout_user"]);
 });
 
-// Edit password.
 ipcMain.handle("edit-password", async (event, { password_id, site_name, account_name, password }) => {
-  const pythonScriptPath = path.join(__dirname, "../server/main.py");
+  const pythonScriptPath = path.join(__dirname, "backend/main.py");
   const pyProcess = spawn("python", [pythonScriptPath, "edit_password", password_id, site_name, account_name, password]);
 
   let data = "";
@@ -291,29 +282,28 @@ ipcMain.handle("edit-password", async (event, { password_id, site_name, account_
   }
 });
 
-// Delete password.
-ipcMain.handle('delete-password', async (event, password_id) => {
-  const pythonScriptPath = path.join(__dirname, '../server/main.py');
-  const pyProcess = spawn('python', [pythonScriptPath, 'delete_password', password_id]);
+ipcMain.handle("delete-password", async (event, password_id) => {
+  const pythonScriptPath = path.join(__dirname, "backend/main.py");
+  const pyProcess = spawn("python", [pythonScriptPath, "delete_password", password_id]);
 
-  let data = '';
-  let error = '';
+  let data = "";
+  let error = "";
 
-  pyProcess.stdout.on('data', (chunk) => {
+  pyProcess.stdout.on("data", (chunk) => {
     data += chunk;
   });
 
-  pyProcess.stderr.on('data', (chunk) => {
+  pyProcess.stderr.on("data", (chunk) => {
     error += chunk;
   });
 
   const exitCode = await new Promise((resolve) => {
-    pyProcess.on('close', resolve);
+    pyProcess.on("close", resolve);
   });
 
   if (exitCode) {
     console.error(`subprocess error exit ${exitCode}, ${error}`);
-    return { status: 'error', message: `subprocess error exit ${exitCode}, ${error}` };
+    return { status: "error", message: `subprocess error exit ${exitCode}, ${error}` };
   }
 
   try {
@@ -321,6 +311,6 @@ ipcMain.handle('delete-password', async (event, password_id) => {
     return result;
   } catch (e) {
     console.error(`JSON parse error: ${data}`);
-    return { status: 'error', message: `JSON parse error: ${data}` };
+    return { status: "error", message: `JSON parse error: ${data}` };
   }
 });

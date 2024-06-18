@@ -1,6 +1,6 @@
 import unittest
 import string
-from server.models.page_manager import PageManager
+from app.backend.models.page_manager import PageManager
 
 # Navigate to project folder and run tests with 
 #   `python -m unittest discover -s tests`
